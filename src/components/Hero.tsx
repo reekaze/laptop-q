@@ -15,9 +15,8 @@ const Hero = ({}: Props) => {
       <Image
         src={"/images/laptop-hero.jpg"}
         fill
-        objectFit="cover"
         alt="hero"
-        className="hover:scale-110 absolute w-full transition"
+        className="hover:scale-11 transition"
       />
     </div>
   );
