@@ -14,15 +14,18 @@ type HotProductsProps = {};
 const HotProducts = ({}: HotProductsProps) => {
   const listProducts = [
     {
-      link: "/images/lenovo_loq_15IRX9.avif",
+      id: 1,
+      imageLink: "/images/lenovo_loq_15IRX9.avif",
       name: "Lenovo LOQ I5IRX9",
     },
     {
-      link: "/images/rog_zephyrus_z16.png",
+      id: 2,
+      imageLink: "/images/rog_zephyrus_z16.png",
       name: "Asus ROG Zephyrus Z16",
     },
     {
-      link: "/images/rog_zephyrus_z16.png",
+      id: 3,
+      imageLink: "/images/rog_zephyrus_z16.png",
       name: "Asus ROG Zephyrus Z16",
     },
   ];
@@ -50,9 +53,12 @@ const HotProducts = ({}: HotProductsProps) => {
         >
           {listProducts.map((product, idx) => {
             return (
-              <SwiperSlide key={idx} className="relative">
+              <SwiperSlide key={product.id} className="relative">
+                <div className="absolute z-10 right-4 top-4 bg-background px-2 py-1 italic border border-primary rounded-md">
+                  {product.name}
+                </div>
                 <Image
-                  src={product.link}
+                  src={product.imageLink}
                   alt="image"
                   fill
                   className="object-contain"
