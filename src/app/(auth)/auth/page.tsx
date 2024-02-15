@@ -6,6 +6,11 @@ import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import qs from "query-string";
+import axios, { AxiosError } from "axios";
+
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
+import { AxiosOnError } from "@/lib/helper";
 
 type AuthPageProps = {
   searchParams: {
@@ -20,18 +25,6 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const isLogin = type === "login";
-
-  useEffect(() => {
-    if (type !== "login" && type !== "register") {
-      return router.push("/auth?type=login");
-    }
-
-    return () => {};
-  }, [router, type]);
-
-  if (type !== "login" && type !== "register") {
-    return <LoadSpin />;
-  }
 
   const onClick = () => {
     const url = qs.stringifyUrl(
@@ -49,60 +42,127 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
     router.push(url);
   };
 
-  return (
-    <div className="relative">
-      <div className="absolute w-full h-[100vh] bg-[url('/images/bg-cube-pattern.jpg')] bg-contain opacity-30"></div>
-      <div className="absolute w-full h-[100vh] flex items-center justify-center">
-        <div className="p-8 bg-primary/95 rounded-xl flex flex-col gap-4">
-          <Logo />
-          <p className="text-h3 font-bold text-white">
-            {isLogin ? "Sign In" : "Register"}
-          </p>
-          {!isLogin && (
-            <MyInput
-              id="username"
-              label="Username"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setUsername(e.target.value);
-              }}
-              value={username}
-              type="text"
-            />
-          )}
-          <MyInput
-            id="email"
-            label="Email"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setEmail(e.target.value);
-            }}
-            type="text"
-            value={email}
-          />
-          <MyInput
-            id="password"
-            label="Password"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setPassword(e.target.value);
-            }}
-            type="password"
-            value={password}
-          />
-          <Button className="py-6 mt-2 text-p font-bold bg-green-400 text-green-800 hover:bg-green-500">
-            {isLogin ? "Login" : "Sign up"}
-          </Button>
+  const login = async () => {
+    if (email === "" || password === "") {
+      return;
+    }
 
-          <p className="text-neutral-400">
-            {isLogin ? "First time?" : "Already had an account?"}
-            <span
-              className="text-white hover:underline cursor-pointer ml-1"
-              onClick={onClick}
+    await axios.post("/api/login", {
+      email,
+      password,
+    });
+  };
+
+  const register = async () => {
+    if (email === "" || username === "" || password === "") {
+      return;
+    }
+
+    await axios.post("/api/register", {
+      email,
+      username,
+      password,
+    });
+  };
+
+  const {
+    mutate: doRegister,
+    isPending: isRegisterPending,
+    isSuccess: isRegisterSuccess,
+  } = useMutation({
+    mutationFn: register,
+    onError: AxiosOnError,
+    onSuccess: (data) => {},
+  });
+
+  const {
+    mutate: doLogin,
+    isPending: IsLoginPending,
+    isSuccess: isLoginSuccess,
+  } = useMutation({
+    mutationFn: login,
+    onError: AxiosOnError,
+    onSuccess: (data) => {},
+  });
+
+  useEffect(() => {
+    if (type !== "login" && type !== "register") {
+      return router.push("/auth?type=login");
+    }
+
+    return () => {};
+  }, [router, type]);
+
+  if (type !== "login" && type !== "register") {
+    return <LoadSpin />;
+  }
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+
+        isLogin ? doLogin() : doRegister();
+      }}
+    >
+      <div className="relative">
+        <div className="absolute w-full h-[100vh] bg-[url('/images/bg-cube-pattern.jpg')] bg-contain opacity-30"></div>
+        <div className="absolute w-full h-[100vh] flex items-center justify-center">
+          <div className="p-8 bg-primary/95 rounded-xl flex flex-col gap-4">
+            <Logo />
+            <p className="text-h3 font-bold text-white">
+              {isLogin ? "Sign In" : "Register"}
+            </p>
+
+            {!isLogin && (
+              <MyInput
+                id="username"
+                label="Username"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setUsername(e.target.value);
+                }}
+                value={username}
+                type="text"
+              />
+            )}
+            <MyInput
+              id="email"
+              label="Email"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setEmail(e.target.value);
+              }}
+              type="text"
+              value={email}
+            />
+            <MyInput
+              id="password"
+              label="Password"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setPassword(e.target.value);
+              }}
+              type="password"
+              value={password}
+            />
+            <Button
+              type="submit"
+              className="text-[16px] py-6 mt-2 font-bold bg-green-400 text-green-800 hover:bg-green-500"
             >
-              {isLogin ? "Create an account" : "Login"}
-            </span>
-          </p>
+              {isLogin ? "Login" : "Sign up"}
+            </Button>
+
+            <p className="text-neutral-400">
+              {isLogin ? "First time?" : "Already had an account?"}
+              <span
+                className="text-white hover:underline cursor-pointer ml-1"
+                onClick={onClick}
+              >
+                {isLogin ? "Create an account" : "Login"}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
