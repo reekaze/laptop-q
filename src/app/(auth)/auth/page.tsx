@@ -27,7 +27,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
   const [password, setPassword] = useState("");
   const isLogin = type === "login";
 
-  const onClick = () => {
+  const switchAuthType = () => {
     const url = qs.stringifyUrl(
       {
         url: pathname || "",
@@ -172,7 +172,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
               {isLogin ? "First time?" : "Already had an account?"}
               <span
                 className="text-white hover:underline cursor-pointer ml-1"
-                onClick={onClick}
+                onClick={switchAuthType}
               >
                 {isLogin ? "Create an account" : "Login"}
               </span>
