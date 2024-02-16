@@ -12,7 +12,7 @@ const MobileMenu = ({}: Props) => {
       <SheetTrigger className="flex sm:hidden">
         <MenuIcon />
       </SheetTrigger>
-      <SheetContent className="w-auto flex sm:hidden">
+      <SheetContent className="w-auto flex flex-col items-start justify-start sm:hidden">
         <MenuItems />
       </SheetContent>
     </Sheet>

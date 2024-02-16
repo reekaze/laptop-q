@@ -1,12 +1,19 @@
+"use client";
 import { Loader2 } from "lucide-react";
 import React from "react";
 
-type Props = {};
+type LoadSpinProps = {
+  color?: string;
+  size?: number;
+};
 
-const LoadSpin = (props: Props) => {
+const LoadSpin = ({ color, size }: LoadSpinProps) => {
   return (
     <div className="flex w-full h-screen items-center justify-center">
-      <Loader2 className="animate-spin text-green-400" size={40} />
+      <Loader2
+        className={`animate-spin ${color ?? "text-green-400"}`}
+        size={size ?? 40}
+      />
     </div>
   );
 };

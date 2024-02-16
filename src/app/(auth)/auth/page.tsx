@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import qs from "query-string";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/components/ui/use-toast";
 import { AxiosOnError } from "@/lib/helper";
+import { cn } from "@/lib/utils";
 
 type AuthPageProps = {
   searchParams: {
@@ -44,7 +45,9 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
 
   const login = async () => {
     if (email === "" || password === "") {
-      return;
+      return toast({
+        description: "Email and Password is required",
+      });
     }
 
     await axios.post("/api/login", {
@@ -55,7 +58,9 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
 
   const register = async () => {
     if (email === "" || username === "" || password === "") {
-      return;
+      return toast({
+        description: "Username, Email and Password is required",
+      });
     }
 
     await axios.post("/api/register", {
@@ -72,17 +77,21 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
   } = useMutation({
     mutationFn: register,
     onError: AxiosOnError,
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      doLogin();
+    },
   });
 
   const {
     mutate: doLogin,
-    isPending: IsLoginPending,
+    isPending: isLoginPending,
     isSuccess: isLoginSuccess,
   } = useMutation({
     mutationFn: login,
     onError: AxiosOnError,
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      router.push("/");
+    },
   });
 
   useEffect(() => {
@@ -144,10 +153,19 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
               value={password}
             />
             <Button
+              disabled={isLoginPending || isRegisterPending}
               type="submit"
               className="text-[16px] py-6 mt-2 font-bold bg-green-400 text-green-800 hover:bg-green-500"
             >
               {isLogin ? "Login" : "Sign up"}
+              <div
+                className={cn(
+                  "ml-2",
+                  isLoginPending || isRegisterPending ? "flex" : "hidden"
+                )}
+              >
+                <LoadSpin color="text-white" size={20} />
+              </div>
             </Button>
 
             <p className="text-neutral-400">
