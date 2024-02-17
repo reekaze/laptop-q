@@ -16,12 +16,12 @@ enum UserType {
 }
 
 model User {
-  id             String    @id @default(uuid())
+  id             String   @id @default(uuid())
   type           UserType
   username       String
-  email          String    @unique
+  email          String   @unique
   hashedPassword String
-  Products       Product[]
+  Order          Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,11 +34,111 @@ model Product {
   description String
   rate        Float
   sold        Int
-  User        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
+
+  VariantTypes    VariantType[]
+  ProductVariants ProductVariant[]
+  ProductImages   ProductImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VariantType {
+  id   String @id @default(uuid())
+  name String
+
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  Variants Variant[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Variant {
+  id   String @id @default(uuid())
+  name String
+
+  VariantType   VariantType @relation(fields: [variantTypeId], references: [id], onDelete: Cascade)
+  variantTypeId String
+
+  ProductVariantsOne ProductVariant[] @relation("VariantOne")
+  ProductVarianstTwo ProductVariant[] @relation("VariantTwo")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductVariant {
+  id String @id @default(uuid())
+
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  VariantOne   Variant? @relation("VariantOne", fields: [variantOneId], references: [id], onDelete: Cascade)
+  variantOneId String?
+  VariantTwo   Variant? @relation("VariantTwo", fields: [variantTwoId], references: [id], onDelete: Cascade)
+  variantTwoId String?
+
+  quantity Int
+  price    Float
+
+  OrderItems OrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId])
+  @@unique([variantOneId, variantTwoId])
+}
+
+model ProductImage {
+  id   String @id @default(uuid())
+  link String
+
+  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PROCESS
+  DELIVER
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  status        OrderStatus @default(PROCESS)
+  address       String
+  lat           Float
+  long          Float
+  deliveryPrice Float
+  totalPrice    Float
+
+  OrderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+
+  ProductVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: SetDefault)
+  productVariantId String
+
+  Order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId String
+
+  quantity Int
+  price    Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
