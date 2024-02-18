@@ -13,6 +13,7 @@ import {
   NavigationMenuTrigger,
 } from "./ui/navigation-menu";
 import axios from "axios";
+import { UserType } from "@prisma/client";
 
 type Props = {};
 
@@ -37,7 +38,6 @@ const MenuItems = ({}: Props) => {
       <ActionTooltip label="Cart">
         <ShoppingCart className="cursor-pointer" />
       </ActionTooltip>
-
       {!user && (
         <>
           <Button
@@ -59,8 +59,27 @@ const MenuItems = ({}: Props) => {
                   {user.username.charAt(0).toUpperCase()}
                 </div>
               </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <div className="w-20 bg-black text-[16px] text-white p-4 flex flex-col gap-2">
+
+              <NavigationMenuContent className="right-0">
+                <div className="w-40 bg-black text-[16px] text-white p-4 flex flex-col gap-2">
+                  {user.type === UserType.ADMIN && (
+                    <p
+                      className="cursor-pointer hover:font-semibold"
+                      onClick={() => {}}
+                    >
+                      Add Product
+                    </p>
+                  )}
+
+                  {user.type === UserType.ADMIN && (
+                    <p
+                      className="cursor-pointer hover:font-semibold"
+                      onClick={() => {}}
+                    >
+                      Manage Product
+                    </p>
+                  )}
+
                   <p
                     className="cursor-pointer hover:font-semibold"
                     onClick={logout}
