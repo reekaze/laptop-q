@@ -2,16 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import db from "@/lib/db";
 import { sign } from "jsonwebtoken";
+import { formLoginSchema } from "@/lib/zodSchema";
+import * as z from "zod";
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    if (!email || !password) {
-      return NextResponse.json("Email and Password is required", {
-        status: 400,
-      });
-    }
+    formLoginSchema.parse({ email, password });
 
     const user = await db.user.findUnique({
       where: {
@@ -62,6 +60,9 @@ export async function POST(req: NextRequest) {
 
     return res;
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(error.issues[0].message, { status: 400 });
+    }
     console.log(error);
     return NextResponse.json(error, {
       status: 500,

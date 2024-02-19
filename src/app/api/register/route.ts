@@ -2,16 +2,15 @@ import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { UserType } from "@prisma/client";
+import { formRegisterSchema } from "@/lib/zodSchema";
+import * as z from "zod";
 
 export async function POST(req: NextRequest) {
   try {
     const { username, email, password } = await req.json();
 
-    if (!username || !email || !password) {
-      return NextResponse.json("Username, Email and Password is required", {
-        status: 400,
-      });
-    }
+    formRegisterSchema.parse({ username, email, password });
+
     const existingEmail = await db.user.findUnique({
       where: {
         email: email,
@@ -39,6 +38,10 @@ export async function POST(req: NextRequest) {
       status: 200,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(error.issues[0].message, { status: 400 });
+    }
+
     console.log(error);
     return NextResponse.json(error, {
       status: 500,

@@ -9,9 +9,9 @@ import qs from "query-string";
 import axios from "axios";
 
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "@/components/ui/use-toast";
 import { AxiosOnError } from "@/lib/helper";
 import { cn } from "@/lib/utils";
+import { formRegisterSchema, formLoginSchema } from "@/lib/zodSchema";
 
 type AuthPageProps = {
   searchParams: {
@@ -44,11 +44,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
   };
 
   const login = async () => {
-    if (email === "" || password === "") {
-      return toast({
-        description: "Email and Password is required",
-      });
-    }
+    formLoginSchema.parse({ email, password });
 
     await axios.post("/api/login", {
       email,
@@ -57,11 +53,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
   };
 
   const register = async () => {
-    if (email === "" || username === "" || password === "") {
-      return toast({
-        description: "Username, Email and Password is required",
-      });
-    }
+    formRegisterSchema.parse({ username, email, password });
 
     await axios.post("/api/register", {
       email,
