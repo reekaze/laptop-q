@@ -65,7 +65,9 @@ const MenuItems = ({}: Props) => {
                   {user.type === UserType.ADMIN && (
                     <p
                       className="cursor-pointer hover:font-semibold"
-                      onClick={() => {}}
+                      onClick={() => {
+                        router.push("/product/add");
+                      }}
                     >
                       Add Product
                     </p>
