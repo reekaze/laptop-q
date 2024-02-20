@@ -9,7 +9,7 @@ type ProductAddLayour = {
 
 const ProductAddLayour = async ({ children }: ProductAddLayour) => {
   const user = await getCurrentUser();
-  if (user?.type === UserType.BASIC) {
+  if (user?.type === UserType.BASIC || !user) {
     return redirect("/");
   }
   return <>{children}</>;
