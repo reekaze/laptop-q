@@ -11,7 +11,7 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosOnError } from "@/lib/helper";
 import { cn } from "@/lib/utils";
-import { formRegisterSchema, formLoginSchema } from "@/lib/zodSchema";
+import { registerFormSchema, loginFormSchema } from "@/lib/zodSchema";
 
 type AuthPageProps = {
   searchParams: {
@@ -44,7 +44,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
   };
 
   const login = async () => {
-    formLoginSchema.parse({ email, password });
+    loginFormSchema.parse({ email, password });
 
     await axios.post("/api/login", {
       email,
@@ -53,7 +53,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
   };
 
   const register = async () => {
-    formRegisterSchema.parse({ username, email, password });
+    registerFormSchema.parse({ username, email, password });
 
     await axios.post("/api/register", {
       email,

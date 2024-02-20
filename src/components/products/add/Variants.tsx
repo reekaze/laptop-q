@@ -1,13 +1,21 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 
-type VariantsProps = {};
+type VariantsProps = {
+  price: number[];
+  onChange: (value: any) => void;
+};
 
 const Variants = ({}: VariantsProps) => {
   const [activeVariants, setActiveVariants] = useState(0);
+
+  const [type, setType] = useState("");
+  const [variants, setVariants] = useState<string[]>([]);
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row justify-between">
@@ -36,7 +44,35 @@ const Variants = ({}: VariantsProps) => {
         </div>
       </div>
       <Separator />
-      {activeVariants === 0 ? <div>asd</div> : <div>bca</div>}
+      {activeVariants === 0 ? (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-row justify-between items-center">
+            <p className="text-[14px] text-neutral-500">Price ($)</p>
+            <Input type="number" className="w-1/2 " />
+          </div>
+          <div className="flex flex-row justify-between items-center">
+            <p className="text-[14px] text-neutral-500">Quantity</p>
+            <Input type="number" className="w-1/2 " />
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <p className="text-[14px] text-neutral-500 flex-1">Type</p>
+          <div className="flex gap-4">
+            <Input
+              value={type}
+              onChange={(value) => setType(value.currentTarget.value)}
+            />
+          </div>
+
+          <Separator />
+          <div className="flex flex-col">
+            {variants.map((variant, idx) => {
+              return <div key={idx}>{variant}</div>;
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import db from "@/lib/db";
 import { sign } from "jsonwebtoken";
-import { formLoginSchema } from "@/lib/zodSchema";
+import { loginFormSchema } from "@/lib/zodSchema";
 import * as z from "zod";
 
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    formLoginSchema.parse({ email, password });
+    loginFormSchema.parse({ email, password });
 
     const user = await db.user.findUnique({
       where: {

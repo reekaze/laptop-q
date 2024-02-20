@@ -7,11 +7,11 @@ import React, { Dispatch, SetStateAction, useRef } from "react";
 
 type ImagesInputProps = {
   images: string[];
-  setImages: Dispatch<SetStateAction<string[]>>;
+  onChange: (value: any) => void;
   max?: number;
 };
 
-const ImagesInput = ({ images, setImages, max }: ImagesInputProps) => {
+const ImagesInput = ({ images, onChange, max }: ImagesInputProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="flex flex-col gap-4">
@@ -30,7 +30,7 @@ const ImagesInput = ({ images, setImages, max }: ImagesInputProps) => {
               <div className="p-1 bg-black rounded-full absolute right-2 top-2">
                 <X
                   onClick={() => {
-                    setImages(images.filter((_, i) => i !== idx));
+                    onChange(images.filter((_, i) => i !== idx));
                   }}
                   size={15}
                   className="text-white"
@@ -49,7 +49,7 @@ const ImagesInput = ({ images, setImages, max }: ImagesInputProps) => {
               const file = event?.target?.files?.[0];
               if (file) {
                 if (images.length < (max || 4)) {
-                  setImages((images) => [...images, URL.createObjectURL(file)]);
+                  onChange([...images, URL.createObjectURL(file)]);
                   console.log(images[0]);
                 } else {
                   toast({

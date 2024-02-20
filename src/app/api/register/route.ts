@@ -2,14 +2,14 @@ import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { UserType } from "@prisma/client";
-import { formRegisterSchema } from "@/lib/zodSchema";
+import { registerFormSchema } from "@/lib/zodSchema";
 import * as z from "zod";
 
 export async function POST(req: NextRequest) {
   try {
     const { username, email, password } = await req.json();
 
-    formRegisterSchema.parse({ username, email, password });
+    registerFormSchema.parse({ username, email, password });
 
     const existingEmail = await db.user.findUnique({
       where: {
