@@ -3,7 +3,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { Bird, PackageOpenIcon, Trash2Icon } from "lucide-react";
 import React, { useState } from "react";
 
 type VariantsProps = {
@@ -11,11 +20,18 @@ type VariantsProps = {
   onChange: (value: any) => void;
 };
 
+type MultiVariants = {
+  name: string;
+  price: number;
+  quantity: number;
+};
+
 const Variants = ({}: VariantsProps) => {
   const [activeVariants, setActiveVariants] = useState(0);
 
   const [type, setType] = useState("");
-  const [variants, setVariants] = useState<string[]>([]);
+  const [multiVariants, setMultiVariants] = useState<MultiVariants[]>([]);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row justify-between">
@@ -57,7 +73,9 @@ const Variants = ({}: VariantsProps) => {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <p className="text-[14px] text-neutral-500 flex-1">Type</p>
+          <p className="text-[14px] text-neutral-500 flex-1">
+            Type (E.g. Color)
+          </p>
           <div className="flex gap-4">
             <Input
               value={type}
@@ -66,11 +84,123 @@ const Variants = ({}: VariantsProps) => {
           </div>
 
           <Separator />
-          <div className="flex flex-col">
-            {variants.map((variant, idx) => {
-              return <div key={idx}>{variant}</div>;
-            })}
-          </div>
+          <Table className="w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="min-w-[200px] max-w-[250px] text-center overflow-clip">
+                  {type === "" ? "Type" : type}
+                </TableHead>
+                <TableHead className="min-w-[200px] max-w-[250px] text-center">
+                  Price ($)
+                </TableHead>
+                <TableHead className="min-w-[200px] max-w-[250px] text-center">
+                  {" "}
+                  Quantity
+                </TableHead>
+                <TableHead className="text-center"> </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {multiVariants.map((variant, idx) => (
+                <TableRow key={idx}>
+                  <TableCell className="text-center">
+                    <Input
+                      placeholder="Name (E.g. Blue)"
+                      value={variant.name}
+                      onChange={(value) => {
+                        setMultiVariants(
+                          multiVariants.map((item, i) => {
+                            if (i === idx) {
+                              return {
+                                ...item,
+                                name: value.currentTarget.value,
+                              };
+                            }
+                            return item;
+                          })
+                        );
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Input
+                      placeholder="Price..."
+                      value={variant.price}
+                      type="number"
+                      min={0}
+                      onChange={(value) => {
+                        setMultiVariants(
+                          multiVariants.map((item, i) => {
+                            if (i === idx) {
+                              return {
+                                ...item,
+                                price: Number(value.currentTarget.value),
+                              };
+                            }
+                            return item;
+                          })
+                        );
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Input
+                      placeholder="Price..."
+                      value={variant.quantity}
+                      type="number"
+                      min={0}
+                      onChange={(value) => {
+                        setMultiVariants(
+                          multiVariants.map((item, i) => {
+                            if (i === idx) {
+                              return {
+                                ...item,
+                                quantity: Number(value.currentTarget.value),
+                              };
+                            }
+                            return item;
+                          })
+                        );
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <Trash2Icon
+                      className="text-destructive cursor-pointer"
+                      onClick={() => {
+                        setMultiVariants(
+                          multiVariants.filter((_, i) => i !== idx)
+                        );
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          {multiVariants.length === 0 && (
+            <div className="flex justify-center">
+              <Bird className="text-neutral-500" />
+            </div>
+          )}
+
+          <Button
+            type="button"
+            onClick={() => {
+              setMultiVariants([
+                ...multiVariants,
+                {
+                  name: "",
+                  price: 0,
+                  quantity: 0,
+                },
+              ]);
+            }}
+            variant={"green"}
+          >
+            Add New Variant
+          </Button>
         </div>
       )}
     </div>
