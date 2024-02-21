@@ -37,7 +37,6 @@ const ProductAddPage = ({}: ProductAddPageProps) => {
       name: "",
       brand: "",
       description: "",
-
       images: [],
     },
   });
@@ -84,6 +83,13 @@ const ProductAddPage = ({}: ProductAddPageProps) => {
           description: "Type must be filled in",
         });
       }
+
+      if (multiVariants.length < 1) {
+        return toast({
+          description: "At least one variant must be added",
+        });
+      }
+
       if (multiVariants.filter((v) => v.name === "").length > 0) {
         return toast({
           description: "All Variant Name must be filled in",

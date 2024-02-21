@@ -1,69 +1,84 @@
 "use client";
-import React from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import ProductCard from "./ProductCard";
+import { useAllProducts } from "@/hooks/useAllProducts";
+import { Loader2Icon, ServerCrashIcon } from "lucide-react";
+import { ProductWithImagesWithVariants } from "@/lib/types";
+import { useInView } from "react-intersection-observer";
 
 type AllProductsProps = {};
 
 const AllProducts = ({}: AllProductsProps) => {
-  const listProducts = [
-    {
-      id: 1,
-      imageLink: "/images/lenovo_loq_15IRX9.avif",
-      name: "Lenovo LOQ I5IRX9",
-      price: 1500,
-      rate: 4.8,
-      sold: 500,
-    },
-    {
-      id: 2,
-      imageLink: "/images/rog_zephyrus_z16.png",
-      name: "Asus ROG Zephyrus Z16",
-      price: 1600,
-      rate: 4.9,
-      sold: 1000,
-    },
-    {
-      id: 3,
-      imageLink: "/images/lenovo_loq_15IRX9.avif",
-      name: "Lenovo LOQ I5IRX9",
-      price: 1500,
-      rate: 4.8,
-      sold: 500,
-    },
-    {
-      id: 4,
-      imageLink: "/images/rog_zephyrus_z16.png",
-      name: "Asus ROG Zephyrus Z16",
-      price: 1600,
-      rate: 4.9,
-      sold: 1000,
-    },
-    {
-      id: 5,
-      imageLink: "/images/lenovo_loq_15IRX9.avif",
-      name: "Lenovo LOQ I5IRX9",
-      price: 1500,
-      rate: 4.8,
-      sold: 500,
-    },
-    {
-      id: 6,
-      imageLink: "/images/rog_zephyrus_z16.png",
-      name: "Asus ROG Zephyrus Z16",
-      price: 1600,
-      rate: 4.9,
-      sold: 1000,
-    },
-  ];
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    status,
+  } = useAllProducts();
+
+  const { ref: bottomRef, inView } = useInView();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (inView && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [fetchNextPage, isFetchingNextPage, inView, hasNextPage]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center">
+        <Loader2Icon className={`animate-spin text-green-400`} size={40} />
+      </div>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <div className="flex items-center justify-center">
+        <ServerCrashIcon className={`text-rose-400 animate-pulse`} size={40} />
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-8 w-full">
-      <p className="text-h3 px-4 xl:px-0 font-bold">All Products</p>
+    <div className="flex flex-col w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-6 px-4 xl:px-0">
-        {listProducts.map((product, idx) => {
-          return <ProductCard key={product.id} {...product} />;
+        {data?.pages.map((page, i) => {
+          return (
+            <Fragment key={i}>
+              {page.products.map((product: ProductWithImagesWithVariants) => {
+                return (
+                  <ProductCard
+                    key={product.id}
+                    id={product.id}
+                    imageLink={product.ProductImages[0].link}
+                    name={product.name}
+                    price={product.ProductVariants[0].price}
+                    rate={product.rate}
+                    sold={product.sold}
+                  />
+                );
+              })}
+            </Fragment>
+          );
         })}
       </div>
+      {isFetchingNextPage && (
+        <div className="flex items-center justify-center mt-4">
+          <Loader2Icon className={`animate-spin text-green-400`} size={40} />
+        </div>
+      )}
+      <div ref={bottomRef} />
     </div>
   );
 };

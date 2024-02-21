@@ -160,7 +160,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
               </div>
             </Button>
 
-            <p className="text-neutral-400">
+            <p className="text-neutral-400 text-p">
               {isLogin ? "First time?" : "Already had an account?"}
               <span
                 className="text-white hover:underline cursor-pointer ml-1"

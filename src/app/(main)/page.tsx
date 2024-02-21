@@ -7,7 +7,10 @@ export default function Home() {
     <>
       <Hero />
       <HotProducts />
-      <AllProducts />
+      <div className="flex flex-col gap-4 sm:gap-8">
+        <p className="text-h3 px-4 xl:px-0 font-bold">All Products</p>
+        <AllProducts />
+      </div>
     </>
   );
 }

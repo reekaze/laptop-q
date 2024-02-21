@@ -5,8 +5,8 @@ import { Separator } from "../ui/separator";
 import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-type ProjectCardProps = {
-  id: number;
+type ProductCardProps = {
+  id: string;
   imageLink: string;
   name: string;
   price: number;
@@ -21,7 +21,7 @@ const ProductCard = ({
   price,
   rate,
   sold,
-}: ProjectCardProps) => {
+}: ProductCardProps) => {
   const router = useRouter();
   return (
     <div

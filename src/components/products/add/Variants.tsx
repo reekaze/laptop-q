@@ -12,16 +12,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { addProductFormSchema } from "@/lib/zodSchema";
-import { Bird, PackageOpenIcon, Trash2Icon } from "lucide-react";
-import React, { Dispatch, SetStateAction, useState } from "react";
-import {
-  Control,
-  FieldValues,
-  SetFieldValue,
-  UseFormSetValue,
-} from "react-hook-form";
-import { z } from "zod";
+import { Bird, Trash2Icon } from "lucide-react";
+import React, { Dispatch, SetStateAction } from "react";
 
 type VariantsProps = {
   type: string;
