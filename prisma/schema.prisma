@@ -32,10 +32,10 @@ model Product {
   name        String
   brand       String
   description String
-  rate        Float
-  sold        Int
+  rate        Float  @default(0.0)
+  sold        Int    @default(0)
+  variantType String
 
-  VariantTypes    VariantType[]
   ProductVariants ProductVariant[]
   ProductImages   ProductImage[]
 
@@ -43,43 +43,12 @@ model Product {
   updatedAt DateTime @updatedAt
 }
 
-model VariantType {
-  id   String @id @default(uuid())
-  name String
-
-  Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String
-
-  Variants Variant[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Variant {
-  id   String @id @default(uuid())
-  name String
-
-  VariantType   VariantType @relation(fields: [variantTypeId], references: [id], onDelete: Cascade)
-  variantTypeId String
-
-  ProductVariantsOne ProductVariant[] @relation("VariantOne")
-  ProductVarianstTwo ProductVariant[] @relation("VariantTwo")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model ProductVariant {
-  id String @id @default(uuid())
+  id   String @id @default(uuid())
+  name String
 
   Product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
-
-  VariantOne   Variant? @relation("VariantOne", fields: [variantOneId], references: [id], onDelete: Cascade)
-  variantOneId String?
-  VariantTwo   Variant? @relation("VariantTwo", fields: [variantTwoId], references: [id], onDelete: Cascade)
-  variantTwoId String?
 
   quantity Int
   price    Float
@@ -88,8 +57,6 @@ model ProductVariant {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@unique([variantOneId, variantTwoId])
 }
 
 model ProductImage {

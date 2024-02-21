@@ -1,12 +1,11 @@
 "use client";
 import Appbar from "@/components/Appbar";
 import ImagesInput from "@/components/products/add/ImagesInput";
-import Variants from "@/components/products/add/Variants";
+import Variants, { MultiVariants } from "@/components/products/add/Variants";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { addProductFormSchema } from "@/lib/zodSchema";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,24 +17,112 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
+import { useState } from "react";
+import { storage } from "@/app/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
+import { Loader2 } from "lucide-react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { delay } from "@/lib/utils";
 
 type ProductAddPageProps = {};
 
 const ProductAddPage = ({}: ProductAddPageProps) => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof addProductFormSchema>>({
     resolver: zodResolver(addProductFormSchema),
     defaultValues: {
       name: "",
       brand: "",
       description: "",
+
       images: [],
-      quantities: [0],
-      prices: [0],
     },
   });
+  const [activeVariants, setActiveVariants] = useState(0);
+  const [type, setType] = useState("");
+  const [multiVariants, setMultiVariants] = useState<MultiVariants[]>([]);
+  const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState(0);
 
-  const onSubmit = (values: z.infer<typeof addProductFormSchema>) => {
-    console.log(values);
+  const uploadImage = async (data: any) => {
+    let uploadedImagesUrl: string[] = [];
+
+    for (let i = 0; i < data.images.length; i++) {
+      const file = await fetch(data.images[i]).then((r) => r.blob());
+
+      const storageRef = ref(storage, `images/${uuidv4()}`);
+      const uploadTask = uploadBytes(storageRef, file);
+
+      const res = await uploadTask;
+      const downloadURL = await getDownloadURL(res.ref);
+
+      uploadedImagesUrl.push(downloadURL);
+    }
+
+    return uploadedImagesUrl;
+  };
+
+  const onSubmit = async (values: z.infer<typeof addProductFormSchema>) => {
+    let data: { [k: string]: any } = {};
+    data = { ...values };
+    if (activeVariants === 0) {
+      if (price === 0 || quantity === 0) {
+        return toast({
+          description: "Price, Quantity must be filled in",
+        });
+      }
+      data.type = "DEFAULT";
+      data.variantName = ["DEFAULT"];
+      data.price = [price];
+      data.quantity = [quantity];
+    } else {
+      if (type === "") {
+        return toast({
+          description: "Type must be filled in",
+        });
+      }
+      if (multiVariants.filter((v) => v.name === "").length > 0) {
+        return toast({
+          description: "All Variant Name must be filled in",
+        });
+      }
+
+      if (multiVariants.filter((v) => v.price < 1).length > 0) {
+        return toast({
+          description: "All Price must be filled in",
+        });
+      }
+
+      if (multiVariants.filter((v) => v.quantity < 1).length > 0) {
+        return toast({
+          description: "All Quantity must be filled in",
+        });
+      }
+
+      data.type = type;
+      data.variantName = multiVariants.map((v) => v.name);
+      data.price = multiVariants.map((v) => v.price);
+      data.quantity = multiVariants.map((v) => v.quantity);
+    }
+
+    data.images = await uploadImage(data);
+
+    try {
+      const res = await axios.post("/api/product/add", data);
+      if (res.status === 200) {
+        toast({
+          description: "Product Added Successfully",
+        });
+
+        await delay(1000);
+        return location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -105,18 +192,26 @@ const ProductAddPage = ({}: ProductAddPageProps) => {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="prices"
-                render={({ field }) => (
-                  <FormItem>
-                    <Variants price={field.value} onChange={field.onChange} />
-                    <FormMessage />
-                  </FormItem>
-                )}
+              <Variants
+                type={type}
+                setType={setType}
+                multiVariants={multiVariants}
+                setMultiVariants={setMultiVariants}
+                price={price}
+                setPrice={setPrice}
+                quantity={quantity}
+                setQuantity={setQuantity}
+                activeVariants={activeVariants}
+                setActiveVariants={setActiveVariants}
               />
 
-              <Button type="submit">Add Product</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Add Product"
+                )}
+              </Button>
             </div>
           </div>
         </div>

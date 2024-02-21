@@ -12,26 +12,48 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { addProductFormSchema } from "@/lib/zodSchema";
 import { Bird, PackageOpenIcon, Trash2Icon } from "lucide-react";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import {
+  Control,
+  FieldValues,
+  SetFieldValue,
+  UseFormSetValue,
+} from "react-hook-form";
+import { z } from "zod";
 
 type VariantsProps = {
-  price: number[];
-  onChange: (value: any) => void;
+  type: string;
+  setType: Dispatch<SetStateAction<string>>;
+  multiVariants: MultiVariants[];
+  setMultiVariants: Dispatch<SetStateAction<MultiVariants[]>>;
+  price: number;
+  setPrice: Dispatch<SetStateAction<number>>;
+  quantity: number;
+  setQuantity: Dispatch<SetStateAction<number>>;
+  activeVariants: number;
+  setActiveVariants: Dispatch<SetStateAction<number>>;
 };
 
-type MultiVariants = {
+export type MultiVariants = {
   name: string;
   price: number;
   quantity: number;
 };
 
-const Variants = ({}: VariantsProps) => {
-  const [activeVariants, setActiveVariants] = useState(0);
-
-  const [type, setType] = useState("");
-  const [multiVariants, setMultiVariants] = useState<MultiVariants[]>([]);
-
+const Variants = ({
+  type,
+  setType,
+  multiVariants,
+  setMultiVariants,
+  price,
+  setPrice,
+  quantity,
+  setQuantity,
+  activeVariants,
+  setActiveVariants,
+}: VariantsProps) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row justify-between">
@@ -40,9 +62,7 @@ const Variants = ({}: VariantsProps) => {
           {["Single", "Multi"].map((item, idx) => {
             return (
               <Badge
-                onClick={() => {
-                  setActiveVariants(idx);
-                }}
+                onClick={() => setActiveVariants(idx)}
                 key={item}
                 className={cn(
                   "cursor-pointer",
@@ -64,11 +84,26 @@ const Variants = ({}: VariantsProps) => {
         <div className="flex flex-col gap-4">
           <div className="flex flex-row justify-between items-center">
             <p className="text-[14px] text-neutral-500">Price ($)</p>
-            <Input type="number" className="w-1/2 " />
+            <Input
+              type="number"
+              className="w-1/2"
+              step={"0.01"}
+              value={price}
+              onChange={(value) => {
+                setPrice(Number(value.currentTarget.value));
+              }}
+            />
           </div>
           <div className="flex flex-row justify-between items-center">
             <p className="text-[14px] text-neutral-500">Quantity</p>
-            <Input type="number" className="w-1/2 " />
+            <Input
+              type="number"
+              className="w-1/2"
+              value={quantity}
+              onChange={(value) => {
+                setQuantity(Number(value.currentTarget.value));
+              }}
+            />
           </div>
         </div>
       ) : (
@@ -79,7 +114,9 @@ const Variants = ({}: VariantsProps) => {
           <div className="flex gap-4">
             <Input
               value={type}
-              onChange={(value) => setType(value.currentTarget.value)}
+              onChange={(value) => {
+                setType(value.currentTarget.value);
+              }}
             />
           </div>
 
@@ -127,6 +164,7 @@ const Variants = ({}: VariantsProps) => {
                       placeholder="Price..."
                       value={variant.price}
                       type="number"
+                      step={"0.01"}
                       min={0}
                       onChange={(value) => {
                         setMultiVariants(
