@@ -15,7 +15,7 @@ const ImagesInput = ({ images, onChange, max }: ImagesInputProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div className="flex flex-col gap-4">
-      <div className="font-semibold">Imagess</div>
+      <div className="font-semibold">Images</div>
       <Separator />
       <div className="relative flex flex-row p-4 gap-4 bg-green-300/50 rounded-md overflow-x-scroll">
         {images.map((image, idx) => {
