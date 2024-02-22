@@ -5,9 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 const PRODUCT_BATCH = 4;
 
 export async function GET(req: NextRequest) {
+  const cursor = req.nextUrl.searchParams.get("cursor");
   try {
-    const cursor = req.nextUrl.searchParams.get("cursor");
-
     let products: Product[] = [];
 
     if (cursor) {
