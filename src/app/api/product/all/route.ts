@@ -1,4 +1,3 @@
-import { getCurrentUser } from "@/lib/actions/getCurrentUser";
 import db from "@/lib/db";
 import { Product } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,12 +6,6 @@ const PRODUCT_BATCH = 4;
 
 export async function GET(req: NextRequest) {
   try {
-    const currentUser = await getCurrentUser();
-
-    if (!currentUser) {
-      return NextResponse.json("user not found", { status: 400 });
-    }
-
     const cursor = req.nextUrl.searchParams.get("cursor");
 
     let products: Product[] = [];
