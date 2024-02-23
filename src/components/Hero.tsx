@@ -14,6 +14,7 @@ const Hero = ({}: Props) => {
 
       <Image
         src={"/images/laptop-hero.jpg"}
+        priority
         fill
         alt="hero"
         className="hover:scale-11 transition"

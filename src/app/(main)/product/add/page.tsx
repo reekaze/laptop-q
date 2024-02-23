@@ -192,6 +192,7 @@ const ProductAddPage = ({}: ProductAddPageProps) => {
                     <ImagesInput
                       images={field.value}
                       onChange={field.onChange}
+                      max={6}
                     />
                     <FormMessage />
                   </FormItem>
