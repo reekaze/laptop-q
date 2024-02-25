@@ -82,7 +82,7 @@ const Variants = ({
               step={"0.01"}
               value={price}
               onChange={(value) => {
-                setPrice(Number(value.currentTarget.value));
+                setPrice(parseInt(value.currentTarget.value));
               }}
             />
           </div>
@@ -93,7 +93,7 @@ const Variants = ({
               className="w-1/2"
               value={quantity}
               onChange={(value) => {
-                setQuantity(Number(value.currentTarget.value));
+                setQuantity(parseInt(value.currentTarget.value));
               }}
             />
           </div>
@@ -164,7 +164,7 @@ const Variants = ({
                             if (i === idx) {
                               return {
                                 ...item,
-                                price: Number(value.currentTarget.value),
+                                price: parseInt(value.currentTarget.value),
                               };
                             }
                             return item;
@@ -175,7 +175,7 @@ const Variants = ({
                   </TableCell>
                   <TableCell className="text-center">
                     <Input
-                      placeholder="Price..."
+                      placeholder="Quantity..."
                       value={variant.quantity}
                       type="number"
                       min={0}
@@ -185,7 +185,7 @@ const Variants = ({
                             if (i === idx) {
                               return {
                                 ...item,
-                                quantity: Number(value.currentTarget.value),
+                                quantity: parseInt(value.currentTarget.value),
                               };
                             }
                             return item;

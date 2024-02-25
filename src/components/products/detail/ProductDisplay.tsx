@@ -1,5 +1,6 @@
 "use client";
 
+import ImageMagnifier from "@/components/ImageMagnifier";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
@@ -16,15 +17,7 @@ const ProductDisplay = ({ links }: ProductDisplayProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative w-80 min-h-80 rounded-lg">
-        <Image
-          src={links[focusIndex]}
-          alt="image"
-          sizes={"1"}
-          fill
-          className="object-contain rounded-lg"
-        />
-      </div>
+      <ImageMagnifier src={links[focusIndex]} />
 
       <div
         onMouseEnter={() => setisListHover(true)}

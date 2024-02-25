@@ -68,7 +68,7 @@ const ProductAddPage = ({}: ProductAddPageProps) => {
     let data: { [k: string]: any } = {};
     data = { ...values };
     if (activeVariants === 0) {
-      if (price === 0 || quantity === 0) {
+      if (price === 0 || isNaN(price) || isNaN(quantity) || quantity === 0) {
         return toast({
           description: "Price, Quantity must be filled in",
         });
@@ -96,13 +96,18 @@ const ProductAddPage = ({}: ProductAddPageProps) => {
         });
       }
 
-      if (multiVariants.filter((v) => v.price < 1).length > 0) {
+      if (
+        multiVariants.filter((v) => v.price < 1 || isNaN(v.price)).length > 0
+      ) {
         return toast({
           description: "All Price must be filled in",
         });
       }
 
-      if (multiVariants.filter((v) => v.quantity < 1).length > 0) {
+      if (
+        multiVariants.filter((v) => v.quantity < 1 || isNaN(v.quantity))
+          .length > 0
+      ) {
         return toast({
           description: "All Quantity must be filled in",
         });

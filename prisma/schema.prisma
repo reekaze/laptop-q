@@ -33,6 +33,7 @@ model Product {
   brand       String
   description String
   rate        Float  @default(0.0)
+  rater       Int    @default(0)
   sold        Int    @default(0)
   variantType String
 

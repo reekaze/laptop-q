@@ -1,11 +1,14 @@
 "use client";
 import LoadSpin from "@/components/LoadSpin";
 import NotFound from "@/components/NotFound";
+import AddToCart from "@/components/products/detail/AddToCart";
+import ProductDetail from "@/components/products/detail/ProductDetail";
 import ProductDisplay from "@/components/products/detail/ProductDisplay";
+import { SelectedVariantProvider } from "@/hooks/useSelectedVariant";
 import { ProductWithImagesWithVariants } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 
 type ProductPageProps = {
   params: {
@@ -22,6 +25,8 @@ const ProductPage = ({ params: { productId } }: ProductPageProps) => {
     },
   });
 
+  const [selectedVariant, setSelectedVariant] = useState(0);
+
   if (status === "pending") {
     return <LoadSpin />;
   } else if (status === "error") {
@@ -29,13 +34,17 @@ const ProductPage = ({ params: { productId } }: ProductPageProps) => {
   }
 
   return (
-    <div className="p-4 xl:p-0 flex flex-col md:flex-row w-full">
-      <div className="mx-auto md:mx-0">
-        <ProductDisplay
-          links={product.ProductImages.map((image) => image.link)}
-        />
+    <SelectedVariantProvider>
+      <div className="p-4 xl:pt-4 flex flex-col md:flex-row gap-4 xl:gap-8 w-full">
+        <div className="mx-auto md:mx-0">
+          <ProductDisplay
+            links={product.ProductImages.map((image) => image.link)}
+          />
+        </div>
+        <ProductDetail product={product} />
+        <AddToCart product={product} />
       </div>
-    </div>
+    </SelectedVariantProvider>
   );
 };
 
