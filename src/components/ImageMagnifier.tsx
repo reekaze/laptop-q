@@ -16,8 +16,6 @@ const ImageMagnifier = ({ src }: ImageMagnifierProps) => {
     const x = ((e.pageX - left) / width) * 100;
     const y = ((e.pageY - top) / height) * 100;
     setPosition({ x, y });
-    console.log(e.pageX);
-    console.log(left);
   };
 
   return (
