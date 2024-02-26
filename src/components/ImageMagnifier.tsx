@@ -37,7 +37,7 @@ const ImageMagnifier = ({ src }: ImageMagnifierProps) => {
 
       {showMagnifier && (
         <div
-          className={"absolute rounded-lg w-80 min-h-80"}
+          className={"absolute rounded-lg w-80 min-h-80 object-contain"}
           style={{
             backgroundImage: `url(${src})`,
             backgroundPosition: `${position.x}% ${position.y}%`,
