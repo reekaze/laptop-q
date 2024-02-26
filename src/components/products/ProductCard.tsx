@@ -4,6 +4,7 @@ import React from "react";
 import { Separator } from "../ui/separator";
 import { Star } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { currenciesFormatter } from "@/lib/utils";
 
 type ProductCardProps = {
   id: string;
@@ -43,7 +44,7 @@ const ProductCard = ({
       <div className="flex-1 py-2 px-3 flex flex-col gap-2">
         <p className="line-clamp-2 mb-auto">{name}</p>
         <h3 className="text-h3 font-semibold bg-gradient-to-b from-green-400 to-neutral-600 bg-clip-text text-transparent flex w-min">
-          ${price}
+          {currenciesFormatter.format(price)}
         </h3>
         <div className="flex items-center text-neutral-500">
           <Star fill="#ffa70f" strokeWidth={0} size={30} />

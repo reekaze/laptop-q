@@ -35,8 +35,8 @@ const ProductPage = ({ params: { productId } }: ProductPageProps) => {
 
   return (
     <SelectedVariantProvider>
-      <div className="p-4 xl:pt-4 flex flex-col md:flex-row gap-4 xl:gap-8 w-full">
-        <div className="mx-auto md:mx-0">
+      <div className="p-4 flex flex-col md:flex-row gap-4 xl:gap-8 w-full relative">
+        <div className="mx-auto md:mx-0 relative">
           <ProductDisplay
             links={product.ProductImages.map((image) => image.link)}
           />

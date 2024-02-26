@@ -1,3 +1,9 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { SelectedVariantContext } from "@/hooks/useSelectedVariant";
@@ -26,9 +32,8 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
         <p>Rating {product.rater}</p>
         <div className="text-neutral-300">|</div>
         <p>Sold {product.sold}</p>
-        <div className="text-neutral-300">|</div>
       </div>
-      <p className="text-h3 font-semibold pb-4">
+      <p className="text-h3 font-semibold mb-4">
         {currenciesFormatter.format(
           product.ProductVariants[selectedVariant].price
         )}
@@ -37,14 +42,14 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
       {product.variantType !== "DEFAULT" && (
         <>
           <p className="font-bold">Choose {product.variantType}:</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-4">
             {product.ProductVariants.map((variant, idx) => {
               return (
                 <div
                   key={variant.id}
                   onClick={() => setSelectedVariant(idx)}
                   className={cn(
-                    `px-3 py-1 border-2 rounded-xl cursor-pointer`,
+                    `px-3 py-1 border-2 rounded-xl cursor-pointer text-[14px]`,
                     idx === selectedVariant
                       ? "border-green-500 text-green-500 bg-green-100/50"
                       : "border-neutral-300 hover:border-green-200"
@@ -57,11 +62,14 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
           </div>
         </>
       )}
-
-      <div className="flex flex-col text-base">
-        <p>Description:</p>
-        <p>{product.description}</p>
-      </div>
+      <Accordion type="single" collapsible defaultValue="item-1">
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="hover:no-underline">
+            Description
+          </AccordionTrigger>
+          <AccordionContent>{product.description}</AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };

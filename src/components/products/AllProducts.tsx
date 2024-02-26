@@ -1,10 +1,9 @@
 "use client";
-import React, { Fragment, useEffect, useRef } from "react";
+import React, { Fragment, useEffect } from "react";
 import ProductCard from "./ProductCard";
 import { useAllProducts } from "@/hooks/useAllProducts";
 import { Loader2Icon, ServerCrashIcon } from "lucide-react";
 import { ProductWithImagesWithVariants } from "@/lib/types";
-import { useInView } from "react-intersection-observer";
 
 type AllProductsProps = {};
 
@@ -18,21 +17,25 @@ const AllProducts = ({}: AllProductsProps) => {
     status,
   } = useAllProducts();
 
-  const { ref: bottomRef, inView } = useInView();
-
   useEffect(() => {
     const handleScroll = () => {
-      if (inView && hasNextPage && !isFetchingNextPage) {
+      const bottom =
+        Math.ceil(window.innerHeight + window.scrollY) >=
+        document.documentElement.scrollHeight;
+
+      if (bottom && hasNextPage && !isFetchingNextPage) {
         fetchNextPage();
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [fetchNextPage, isFetchingNextPage, inView, hasNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   if (isLoading) {
     return (
@@ -78,7 +81,6 @@ const AllProducts = ({}: AllProductsProps) => {
           <Loader2Icon className={`animate-spin text-green-400`} size={40} />
         </div>
       )}
-      <div ref={bottomRef} />
     </div>
   );
 };
