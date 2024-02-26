@@ -67,7 +67,9 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
           <AccordionTrigger className="hover:no-underline">
             Description
           </AccordionTrigger>
-          <AccordionContent>{product.description}</AccordionContent>
+          <AccordionContent className="whitespace-pre-wrap">
+            {product.description}
+          </AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>
