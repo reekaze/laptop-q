@@ -64,7 +64,7 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
       )}
       <Accordion type="single" collapsible defaultValue="item-1">
         <AccordionItem value="item-1">
-          <AccordionTrigger className="hover:no-underline">
+          <AccordionTrigger className="hover:no-underline font-semibold">
             Description
           </AccordionTrigger>
           <AccordionContent className="whitespace-pre-wrap">

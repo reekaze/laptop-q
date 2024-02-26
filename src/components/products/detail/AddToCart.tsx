@@ -34,7 +34,7 @@ const AddToCart = ({ product }: AddToCardProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 border-2 border-green-400 rounded-lg p-4 h-min sticky top-[83px]">
+    <div className="flex flex-col gap-4 border-2 border-green-400 rounded-lg p-4 h-min sticky top-[83px] text-[14px]">
       <p className="">Quantity</p>
       <div className="flex gap-2 justify-between">
         <div
@@ -54,7 +54,7 @@ const AddToCart = ({ product }: AddToCardProps) => {
         <Input
           value={quantity}
           type="number"
-          className="text-center min-w-12 max-h-8 text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          className="text-center min-w-12 max-h-8 text-[14px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setQuantity(parseInt(e.target.value))
           }
