@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { SelectedVariantContext } from "@/hooks/useSelectedVariant";
+import { AxiosOnError } from "@/lib/helper";
 import { ProductWithImagesWithVariants } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Minus, Plus } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { Loader2, Minus, Plus } from "lucide-react";
 import React, { ChangeEvent, useContext, useState } from "react";
 
 type AddToCardProps = {
@@ -30,8 +33,27 @@ const AddToCart = ({ product }: AddToCardProps) => {
       toast({
         description: "Quantity should below or same as Stock",
       });
+    } else {
+      mutate();
     }
   };
+
+  const { mutate, data, isPending } = useMutation({
+    mutationKey: [`cart-add-${product.ProductVariants[selectedVariant].id}`],
+    mutationFn: async () => {
+      const res = await axios.post("/api/cart/add", {
+        productVariantId: product.ProductVariants[selectedVariant].id,
+        quantity,
+      });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast({
+        description: "Product Added Successfully",
+      });
+    },
+    onError: AxiosOnError,
+  });
 
   return (
     <div className="flex flex-col gap-4 border-2 border-green-400 rounded-lg p-4 h-min sticky top-[83px] text-[14px]">
@@ -83,8 +105,12 @@ const AddToCart = ({ product }: AddToCardProps) => {
         Stock: {product.ProductVariants[selectedVariant].quantity}
       </p>
 
-      <Button onClick={handleOnClick} variant={"green"}>
-        Add To Cart
+      <Button disabled={isPending} onClick={handleOnClick} variant={"green"}>
+        {isPending ? (
+          <Loader2 className="animate-spin text-white" />
+        ) : (
+          "Add To Cart"
+        )}
       </Button>
     </div>
   );

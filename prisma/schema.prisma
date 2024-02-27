@@ -121,9 +121,8 @@ model Cart {
 
   CartItems CartItem[]
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  cartItemId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CartItem {

@@ -30,6 +30,15 @@ export const addProductFormSchema = z.object({
     .min(1, { message: "Image must be at least 1" }),
 });
 
+export const addCartFormSchema = z.object({
+  productVariantId: z.string().min(1, {
+    message: "Product Variant ID must be at least 1 character",
+  }),
+  quantity: z.number().min(1, {
+    message: "Quantity must be at least 1",
+  }),
+});
+
 // variantType: z
 //     .string()
 //     .min(4, { message: "Type must be at least 4 characters" }),

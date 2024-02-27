@@ -31,6 +31,9 @@ export async function POST(req: NextRequest) {
         email,
         hashedPassword,
         type: UserType.BASIC,
+        Cart: {
+          create: {},
+        },
       },
     });
 
