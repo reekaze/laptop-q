@@ -20,7 +20,7 @@ const CartPage = ({}: CartPageProps) => {
           <LoadSpin hscreen={false} />
         ) : status === "error" ? (
           <SomethingWrong hscreen={false} />
-        ) : cartItems.length === 0 || cartItems === null ? (
+        ) : cartItems?.length === 0 || cartItems === null ? (
           <NotFound hscreen={false} title="Items" />
         ) : (
           <>
