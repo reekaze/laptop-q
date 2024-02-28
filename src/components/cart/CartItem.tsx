@@ -5,6 +5,7 @@ import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import React, { ChangeEvent, useEffect, useReducer, useState } from "react";
 import { Input } from "../ui/input";
+import { useUpdateCartItem } from "@/hooks/useUpdateCartItem";
 
 type CartItemProps = {
   item: CartItemType;
@@ -12,13 +13,34 @@ type CartItemProps = {
 
 const CartItem = ({ item }: CartItemProps) => {
   const [quantity, setQuantity] = useState(item.quantity);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const isQuantityAvailable = quantity < item.ProductVariant.quantity;
+  const isQuantityOver = quantity > item.ProductVariant.quantity;
+
+  const { updateCartItem } = useUpdateCartItem({
+    productVariantId: item.productVariantId,
+    quantity,
+  });
+
   useEffect(() => {
     setQuantity(item.quantity);
 
     return () => {};
   }, [item.quantity]);
 
-  const isQuantityAvailable = quantity < item.ProductVariant.quantity;
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(async () => {
+      if (isMounted && !isQuantityOver && !isNaN(quantity) && quantity > 0) {
+        (document.activeElement as HTMLElement).blur();
+        updateCartItem();
+      }
+    }, 1000);
+    setIsMounted(true);
+    return () => {
+      clearTimeout(delayDebounceFn);
+    };
+  }, [quantity, isQuantityOver]);
 
   return (
     <div className="flex flex-row gap-4">
@@ -66,9 +88,10 @@ const CartItem = ({ item }: CartItemProps) => {
           <Input
             value={quantity}
             type="number"
+            autoComplete="off"
             className="text-center min-w-12 max-h-8 text-[14px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setQuantity(parseInt(e.target.value))
+              setQuantity(parseInt(e.target.value.replace(/^0+/, "")))
             }
           />
           <div
@@ -90,6 +113,9 @@ const CartItem = ({ item }: CartItemProps) => {
             />
           </div>
         </div>
+        {isQuantityOver && (
+          <p className="font-semibold">max: {item.ProductVariant.quantity}</p>
+        )}
       </div>
     </div>
   );

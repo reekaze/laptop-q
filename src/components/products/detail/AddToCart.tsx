@@ -78,7 +78,7 @@ const AddToCart = ({ product }: AddToCardProps) => {
           type="number"
           className="text-center min-w-12 max-h-8 text-[14px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setQuantity(parseInt(e.target.value))
+            setQuantity(parseInt(e.target.value.replace(/^0+/, "")))
           }
         />
         <div
