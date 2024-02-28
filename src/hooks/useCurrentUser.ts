@@ -1,9 +1,7 @@
 "use client";
 import { User } from "@prisma/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import Cookies from "js-cookie";
-import { cookies } from "next/headers";
 
 export const useCurrentUser = () => {
   //get current user in client components

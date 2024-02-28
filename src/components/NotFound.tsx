@@ -1,16 +1,22 @@
+import { cn } from "@/lib/utils";
 import { BirdIcon } from "lucide-react";
-import { title } from "process";
 import React from "react";
 
 type NotFoundProps = {
   color?: string;
   size?: number;
   title?: string;
+  hscreen?: boolean;
 };
 
-const NotFound = ({ title, color, size }: NotFoundProps) => {
+const NotFound = ({ title, color, size, hscreen = true }: NotFoundProps) => {
   return (
-    <div className="flex flex-col gap-8 w-full h-screen items-center justify-center">
+    <div
+      className={cn(
+        "flex flex-col gap-8 w-full items-center justify-center",
+        hscreen && "h-screen"
+      )}
+    >
       <BirdIcon
         className={`${color ?? "text-neutral-500"}`}
         size={size ?? 40}

@@ -14,29 +14,29 @@ import {
 } from "./ui/navigation-menu";
 import axios from "axios";
 import { UserType } from "@prisma/client";
+import Link from "next/link";
 
 type Props = {};
 
 const MenuItems = ({}: Props) => {
-  const { user, isLoading, refetch } = useCurrentUser();
+  const { user, isLoading } = useCurrentUser();
   const router = useRouter();
 
   const logout = async () => {
     await axios.get("/api/logout");
-    refetch();
-    router.refresh();
+    location.reload();
   };
 
   if (isLoading) {
-    return (
-      <div className="w-20 h-8 animate-pulse bg-neutral-500 rounded-xl"></div>
-    );
+    return <div className="w-20 h-8 animate-pulse bg-neutral-500 rounded-xl" />;
   }
 
   return (
     <div className="sm:flex-row flex-col flex gap-4 sm:items-center">
       <ActionTooltip label="Cart">
-        <ShoppingCart className="cursor-pointer" />
+        <Link href={"/cart"}>
+          <ShoppingCart className="cursor-pointer" />
+        </Link>
       </ActionTooltip>
       {!user && (
         <>

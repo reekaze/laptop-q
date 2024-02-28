@@ -8,7 +8,6 @@ import { SelectedVariantProvider } from "@/hooks/useSelectedVariant";
 import { ProductWithImagesWithVariants } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React, { useState } from "react";
 
 type ProductPageProps = {
   params: {
@@ -24,8 +23,6 @@ const ProductPage = ({ params: { productId } }: ProductPageProps) => {
       return res.data as ProductWithImagesWithVariants;
     },
   });
-
-  const [selectedVariant, setSelectedVariant] = useState(0);
 
   if (status === "pending") {
     return <LoadSpin />;

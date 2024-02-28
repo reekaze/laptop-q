@@ -1,3 +1,4 @@
+"use client";
 import { Dispatch, SetStateAction, createContext, useState } from "react";
 
 type SelectedVariantContextProps = {

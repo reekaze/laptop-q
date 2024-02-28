@@ -33,7 +33,7 @@ const ProductDetail = ({ product }: ProductDetailProps) => {
         <div className="text-neutral-300">|</div>
         <p>Sold {product.sold}</p>
       </div>
-      <p className="text-h3 font-semibold mb-4">
+      <p className="text-h3 font-semibold mb-4 bg-gradient-to-b from-green-400 to-neutral-600 bg-clip-text text-transparent">
         {currenciesFormatter.format(
           product.ProductVariants[selectedVariant].price
         )}
