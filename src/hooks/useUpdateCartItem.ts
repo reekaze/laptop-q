@@ -1,6 +1,7 @@
 import { AxiosOnError } from "@/lib/helper";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useAllCartItems } from "./useAllCartItems";
 
 type useUpdateCartItemProps = {
   productVariantId: string;
@@ -11,6 +12,8 @@ export const useUpdateCartItem = ({
   productVariantId,
   quantity,
 }: useUpdateCartItemProps) => {
+  const { refetch } = useAllCartItems();
+
   const {
     data,
     mutate: updateCartItem,
@@ -24,6 +27,9 @@ export const useUpdateCartItem = ({
       });
 
       return res.data;
+    },
+    onSuccess: (data) => {
+      refetch();
     },
     onError: AxiosOnError,
   });

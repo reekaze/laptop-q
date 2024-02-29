@@ -43,3 +43,9 @@ export const addCartFormSchema = z.object({
       message: "Quantity must be at least 1",
     }),
 });
+
+export const deleteCartFormSchema = z.object({
+  cartItemId: z.string().min(1, {
+    message: "Product Variant ID must be at least 1 character",
+  }),
+});

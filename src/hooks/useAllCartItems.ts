@@ -7,6 +7,7 @@ export const useAllCartItems = () => {
     data: cartItems,
     status,
     refetch,
+    isRefetching,
   } = useQuery({
     queryKey: ["cart-all"],
     queryFn: async () => {
@@ -23,5 +24,6 @@ export const useAllCartItems = () => {
     cartItems,
     status,
     refetch,
+    isRefetching,
   };
 };

@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/lib/actions/getCurrentUser";
 import db from "@/lib/db";
-import { addCartFormSchema } from "@/lib/zodSchema";
+import { addCartFormSchema, deleteCartFormSchema } from "@/lib/zodSchema";
 import { NextRequest, NextResponse } from "next/server";
 import * as z from "zod";
 
@@ -80,5 +80,39 @@ export async function POST(req: NextRequest) {
 
     console.log(error);
     return NextResponse.json(error, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { cartItemId } = await req.json();
+
+    deleteCartFormSchema.parse({
+      cartItemId,
+    });
+
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) {
+      return NextResponse.json("user not found", { status: 400 });
+    }
+
+    const deletedCartItem = await db.cartItem.delete({
+      where: {
+        id: cartItemId,
+      },
+    });
+
+    return NextResponse.json(deletedCartItem, { status: 200 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(error.issues[0].message, {
+        status: 400,
+      });
+    }
+    console.log(error);
+    return NextResponse.json(error, {
+      status: 500,
+    });
   }
 }

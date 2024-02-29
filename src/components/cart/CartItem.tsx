@@ -1,11 +1,12 @@
 "use client";
 import { CartItemType } from "@/lib/types";
 import { cn, currenciesFormatter } from "@/lib/utils";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Trash2Icon } from "lucide-react";
 import Image from "next/image";
-import React, { ChangeEvent, useEffect, useReducer, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { useUpdateCartItem } from "@/hooks/useUpdateCartItem";
+import { useDeleteCartItem } from "@/hooks/useDeleteCartItem";
 
 type CartItemProps = {
   item: CartItemType;
@@ -21,6 +22,10 @@ const CartItem = ({ item }: CartItemProps) => {
   const { updateCartItem } = useUpdateCartItem({
     productVariantId: item.productVariantId,
     quantity,
+  });
+
+  const { deleteCartItem } = useDeleteCartItem({
+    cartItemId: item.id,
   });
 
   useEffect(() => {
@@ -45,7 +50,7 @@ const CartItem = ({ item }: CartItemProps) => {
   return (
     <div className="flex flex-row gap-4">
       <div className="flex items-center">
-        <div className="relative  min-w-10 min-h-10 md:min-w-20 md:min-h-20">
+        <div className="relative min-w-10 min-h-10 md:min-w-20 md:min-h-20">
           <Image
             src={item.ProductVariant.Product.ProductImages[0].link}
             alt="image"
@@ -66,11 +71,17 @@ const CartItem = ({ item }: CartItemProps) => {
         )}
       </div>
 
-      <div className="flex flex-col gap-1 items-end">
+      <div className="flex flex-col gap-2 items-end">
         <p className="font-semibold">
           {currenciesFormatter.format(item.ProductVariant.price)}
         </p>
-        <div className="flex gap-2 justify-between">
+        <div className="flex items-center gap-2">
+          <Trash2Icon
+            onClick={() => {
+              deleteCartItem();
+            }}
+            className="flex flex-shrink-0 text-slate-400 cursor-pointer"
+          />
           <div
             onClick={() => {
               quantity > 1 && setQuantity(quantity - 1);
