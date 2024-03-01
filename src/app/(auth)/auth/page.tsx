@@ -83,6 +83,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
     onError: AxiosOnError,
     onSuccess: (data) => {
       router.push("/");
+      router.refresh();
     },
   });
 
