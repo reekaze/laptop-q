@@ -16,7 +16,7 @@ const ProductDisplay = ({ links }: ProductDisplayProps) => {
   const [totalListTranslate, setTotalListTranslate] = useState(0);
 
   return (
-    <div className="flex flex-col gap-4  sticky top-[83px]">
+    <div className="flex flex-col gap-4">
       <ImageMagnifier src={links[focusIndex]} />
 
       <div

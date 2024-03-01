@@ -15,6 +15,7 @@ import {
 import axios from "axios";
 import { UserType } from "@prisma/client";
 import Link from "next/link";
+import { toast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -34,19 +35,26 @@ const MenuItems = ({}: Props) => {
   return (
     <div className="sm:flex-row flex-col flex gap-4 sm:items-center">
       <ActionTooltip label="Cart">
-        <Link href={"/cart"}>
+        <Link
+          href={"/cart"}
+          onClick={() =>
+            !user &&
+            toast({
+              description: "user not found",
+            })
+          }
+        >
           <ShoppingCart className="cursor-pointer" />
         </Link>
       </ActionTooltip>
       {!user && (
         <>
-          <Button
-            onClick={() => router.push("/auth?type=register")}
-            variant={"outline"}
-          >
-            Register
-          </Button>
-          <Button onClick={() => router.push("/auth?type=login")}>Login</Button>
+          <Link href={"/auth?type=register"}>
+            <Button variant={"outline"}>Register</Button>
+          </Link>
+          <Link href={"/auth?type=login"}>
+            <Button>Login</Button>
+          </Link>
         </>
       )}
 

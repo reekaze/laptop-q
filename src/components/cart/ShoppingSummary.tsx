@@ -30,7 +30,7 @@ const ShoppingSummary = ({}: ShoppingSummaryProps) => {
       <div className="flex flex-row justify-between">
         <p>Total</p>
         {isRefetching ? (
-          <div className="w-24 h-6 rounded-xl bg-green-200 animate-pulse" />
+          <div className="w-24 h-6 rounded-xl bg-green-300 animate-pulse" />
         ) : (
           <p className="font-semibold">
             {currenciesFormatter.format(totalPrice)}
