@@ -1,5 +1,5 @@
 "use client";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import ProductCard from "./ProductCard";
 import { useAllProducts } from "@/hooks/useAllProducts";
 import { Loader2Icon, ServerCrashIcon } from "lucide-react";
@@ -17,25 +17,28 @@ const AllProducts = ({}: AllProductsProps) => {
     status,
   } = useAllProducts();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const bottom =
-        Math.ceil(window.innerHeight + window.scrollY) >=
-        document.documentElement.scrollHeight;
+  const ref = useRef<HTMLDivElement>(null);
 
-      if (bottom && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
+  const handleObserver = (entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  useEffect(() => {
+    const options = {
+      threshold: 1.0,
     };
 
-    window.addEventListener("scroll", handleScroll, {
-      passive: true,
-    });
+    const observer = new IntersectionObserver(handleObserver, options);
+
+    if (observer && ref.current) observer.observe(ref.current);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      if (observer) observer.disconnect();
     };
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [data?.pages.length]);
 
   if (isLoading) {
     return (
@@ -56,25 +59,27 @@ const AllProducts = ({}: AllProductsProps) => {
   return (
     <div className="flex flex-col w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-x-4 gap-y-6 px-4 xl:px-0">
-        {data?.pages.map((page, i) => {
-          return (
-            <Fragment key={i}>
-              {page.products.map((product: ProductWithImagesWithVariants) => {
-                return (
-                  <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    imageLink={product.ProductImages[0].link}
-                    name={product.name}
-                    price={product.ProductVariants[0].price}
-                    rate={product.rate}
-                    sold={product.sold}
-                  />
-                );
-              })}
-            </Fragment>
-          );
-        })}
+        {data?.pages.flatMap((page, i) =>
+          page.products.map(
+            (product: ProductWithImagesWithVariants, j: number) => (
+              <ProductCard
+                elementRef={
+                  i === data?.pages.length - 1 &&
+                  j === data?.pages[i].products.length - 1
+                    ? ref
+                    : null
+                }
+                key={product.id}
+                id={product.id}
+                imageLink={product.ProductImages[0].link}
+                name={product.name}
+                price={product.ProductVariants[0].price}
+                rate={product.rate}
+                sold={product.sold}
+              />
+            )
+          )
+        )}
       </div>
       {isFetchingNextPage && (
         <div className="flex items-center justify-center mt-4">

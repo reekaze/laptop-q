@@ -13,6 +13,7 @@ type ProductCardProps = {
   price: number;
   rate: number;
   sold: number;
+  elementRef: React.RefObject<HTMLDivElement> | null;
 };
 
 const ProductCard = ({
@@ -22,6 +23,7 @@ const ProductCard = ({
   price,
   rate,
   sold,
+  elementRef,
 }: ProductCardProps) => {
   const router = useRouter();
   return (
@@ -30,6 +32,7 @@ const ProductCard = ({
         router.push(`/product/${id}`);
       }}
       className="w-full h-[30vw] min-h-[320px] max-h-[380px] flex flex-col bg-background border-neutral-300 border rounded-xl cursor-pointer hover:border-green-500/80 hover:scale-105 transition shadow-md"
+      ref={elementRef}
     >
       <div className="w-full h-[15vw] min-h-32 max-h-44 relative">
         <Image
