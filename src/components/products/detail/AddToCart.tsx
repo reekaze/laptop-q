@@ -56,7 +56,7 @@ const AddToCart = ({ product }: AddToCardProps) => {
   });
 
   return (
-    <div className="flex flex-col gap-4 border-2 border-green-400 rounded-lg p-4 h-min sticky top-[83px] text-[14px]">
+    <div className="flex flex-col gap-4 border-2 bg-white border-green-400 rounded-lg p-4 h-min sticky md:top-[83px] bottom-0 md:w-fit w-full text-[14px]">
       <p className="">Quantity</p>
       <div className="flex gap-2 justify-between">
         <div

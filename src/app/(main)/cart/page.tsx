@@ -15,7 +15,7 @@ const CartPage = ({}: CartPageProps) => {
   return (
     <div className="flex flex-col">
       <Appbar title="Cart" />
-      <div className="flex flex-col md:flex-row px-4 gap-4">
+      <div className="relative flex flex-col items-start md:flex-row px-4 gap-4">
         {status === "pending" ? (
           <LoadSpin hscreen={false} />
         ) : status === "error" ? (
