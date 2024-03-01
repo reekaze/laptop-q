@@ -9,7 +9,7 @@ export const useCurrentUser = () => {
     data: user,
     isError,
     isLoading,
-    refetch,
+    refetch: refetchCurrentUser,
   } = useQuery({
     queryKey: ["current-user"],
     queryFn: async () => {
@@ -22,5 +22,5 @@ export const useCurrentUser = () => {
       return null;
     },
   });
-  return { user, isLoading, refetch };
+  return { user, isLoading, refetchCurrentUser };
 };

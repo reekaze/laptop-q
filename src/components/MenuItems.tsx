@@ -20,12 +20,12 @@ import { toast } from "./ui/use-toast";
 type Props = {};
 
 const MenuItems = ({}: Props) => {
-  const { user, isLoading } = useCurrentUser();
+  const { user, isLoading, refetchCurrentUser } = useCurrentUser();
   const router = useRouter();
 
   const logout = async () => {
     await axios.get("/api/logout");
-    location.reload();
+    refetchCurrentUser();
   };
 
   if (isLoading) {
