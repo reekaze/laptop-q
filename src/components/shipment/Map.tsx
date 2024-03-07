@@ -1,4 +1,5 @@
 "use client";
+
 import {
   MapContainer,
   Marker,
@@ -9,7 +10,8 @@ import {
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Map as LMap } from "leaflet";
 
 type MapProps = {
   center: {
@@ -29,6 +31,8 @@ type MapProps = {
 };
 
 const Map = ({ center, position, setPosition }: MapProps) => {
+  const [lmap, setLmap] = useState<LMap | undefined>();
+
   const RecenterAutomatically = () => {
     const map = useMapEvents({
       drag: (e) => {
@@ -37,10 +41,28 @@ const Map = ({ center, position, setPosition }: MapProps) => {
       zoom: (e) => {
         setPosition(map.getCenter());
       },
+      locationfound: (e) => {
+        setPosition(e.latlng);
+        map.flyTo(e.latlng, map.getZoom());
+      },
     });
+
+    useEffect(() => {
+      setLmap(map);
+
+      return () => {};
+    }, [map]);
 
     return null;
   };
+
+  useEffect(() => {
+    if (lmap !== undefined) {
+      lmap.locate();
+    }
+
+    return () => {};
+  }, [lmap]);
 
   return (
     <MapContainer center={center} zoom={12.0} className="h-full">
