@@ -9,7 +9,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 type MapProps = {
   center: {

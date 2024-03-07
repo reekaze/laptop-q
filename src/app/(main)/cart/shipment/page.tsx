@@ -8,6 +8,10 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
+const Map = dynamic(() => import("@/components/shipment/Map"), {
+  ssr: false,
+});
+
 type CartShip = {};
 
 const CartShipmentPage = (CartShip: CartShip) => {
@@ -19,10 +23,6 @@ const CartShipmentPage = (CartShip: CartShip) => {
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [position, setPosition] = useState(center);
-
-  const Map = dynamic(() => import("@/components/shipment/Map"), {
-    ssr: false,
-  });
 
   //   if (selectedList.length === 0) {
   //     router.push("/cart");
