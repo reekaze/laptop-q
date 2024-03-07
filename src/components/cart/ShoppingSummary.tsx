@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { CartItemType } from "@/lib/types";
 import { currenciesFormatter } from "@/lib/utils";
 import { useSelectedCartList } from "@/hooks/selectedCartList";
+import LoadSpin from "../LoadSpin";
 
 type ShoppingSummaryProps = {};
 
@@ -14,17 +15,21 @@ const ShoppingSummary = ({}: ShoppingSummaryProps) => {
   const selectedList = useSelectedCartList((state) => state.selectedList);
 
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalItem, setTotalItem] = useState(0);
 
   useEffect(() => {
     let total = 0;
+    let totItem = 0;
 
     (cartItems as CartItemType[]).map((item, index) => {
       if (selectedList[index] === true) {
         total += item.quantity * item.ProductVariant.price;
+        totItem += item.quantity;
       }
     });
 
     setTotalPrice(total);
+    setTotalItem(totItem);
 
     return () => {};
   }, [cartItems, selectedList]);
@@ -42,7 +47,13 @@ const ShoppingSummary = ({}: ShoppingSummaryProps) => {
           </p>
         )}
       </div>
-      <Button variant={"green"}>Buy</Button>
+      <Button variant={"green"}>
+        {isRefetching ? (
+          <LoadSpin hscreen={false} color="text-black" size={20} />
+        ) : (
+          `Buy${totalItem !== 0 ? " " + totalItem : ""}`
+        )}
+      </Button>
     </div>
   );
 };

@@ -33,11 +33,11 @@ export const useAllCartItems = () => {
     if (cartItems) {
       const prevLength = selectedList.length;
       updateSelectedList([
-        ...selectedList,
         ...Array.from(
           { length: cartItems.length - prevLength },
           (v, k) => true
         ),
+        ...selectedList,
       ]);
     }
 

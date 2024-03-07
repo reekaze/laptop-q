@@ -2,13 +2,22 @@ import { AxiosOnError } from "@/lib/helper";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useAllCartItems } from "./useAllCartItems";
+import { useSelectedCartList } from "./selectedCartList";
 
 type useDeleteCartItemProps = {
   cartItemId: string;
+  index: number;
 };
 
-export const useDeleteCartItem = ({ cartItemId }: useDeleteCartItemProps) => {
+export const useDeleteCartItem = ({
+  cartItemId,
+  index,
+}: useDeleteCartItemProps) => {
   const { refetch: refectAllCartItems } = useAllCartItems();
+  const selectedList = useSelectedCartList((state) => state.selectedList);
+  const updateSelectedList = useSelectedCartList(
+    (state) => state.updateSelectedList
+  );
   const {
     data,
     mutate: deleteCartItem,
@@ -22,6 +31,7 @@ export const useDeleteCartItem = ({ cartItemId }: useDeleteCartItemProps) => {
     },
     onSuccess: (data) => {
       refectAllCartItems();
+      updateSelectedList(selectedList.filter((val, i) => i !== index));
     },
     onError: AxiosOnError,
   });

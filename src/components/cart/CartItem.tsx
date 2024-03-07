@@ -34,6 +34,7 @@ const CartItem = ({ item, index }: CartItemProps) => {
 
   const { deleteCartItem } = useDeleteCartItem({
     cartItemId: item.id,
+    index,
   });
 
   useEffect(() => {
