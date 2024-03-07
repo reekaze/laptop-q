@@ -1,11 +1,12 @@
 "use client";
 import Appbar from "@/components/Appbar";
-import Map from "@/components/shipment/Map";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useSelectedCartList } from "@/hooks/selectedCartList";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type CartShip = {};
 
@@ -16,10 +17,12 @@ const CartShipmentPage = (CartShip: CartShip) => {
   };
   const selectedList = useSelectedCartList((state) => state.selectedList);
   const router = useRouter();
-
   const [phone, setPhone] = useState("");
-
   const [position, setPosition] = useState(center);
+
+  const Map = dynamic(() => import("@/components/shipment/Map"), {
+    ssr: false,
+  });
 
   //   if (selectedList.length === 0) {
   //     router.push("/cart");
