@@ -6,10 +6,12 @@ import { CartItemType } from "@/lib/types";
 import { currenciesFormatter } from "@/lib/utils";
 import { useSelectedCartList } from "@/hooks/selectedCartList";
 import LoadSpin from "../LoadSpin";
+import { useRouter } from "next/navigation";
 
 type ShoppingSummaryProps = {};
 
 const ShoppingSummary = ({}: ShoppingSummaryProps) => {
+  const router = useRouter();
   const { cartItems, status, isRefetching } = useAllCartItems();
 
   const selectedList = useSelectedCartList((state) => state.selectedList);
@@ -47,7 +49,11 @@ const ShoppingSummary = ({}: ShoppingSummaryProps) => {
           </p>
         )}
       </div>
-      <Button variant={"green"}>
+      <Button
+        variant={"green"}
+        disabled={isRefetching}
+        onClick={() => totalItem != 0 && router.push("/cart/shipment")}
+      >
         {isRefetching ? (
           <LoadSpin hscreen={false} color="text-black" size={20} />
         ) : (

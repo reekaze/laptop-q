@@ -86,6 +86,7 @@ model Order {
 
   status        OrderStatus @default(PROCESS)
   address       String
+  contactPhone  String
   lat           Float
   long          Float
   deliveryPrice Float

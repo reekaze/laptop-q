@@ -26,6 +26,7 @@ const MenuItems = ({}: Props) => {
   const logout = async () => {
     await axios.get("/api/logout");
     refetchCurrentUser();
+    location.reload();
   };
 
   if (isLoading) {
