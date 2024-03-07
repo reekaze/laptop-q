@@ -7,14 +7,22 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { useUpdateCartItem } from "@/hooks/useUpdateCartItem";
 import { useDeleteCartItem } from "@/hooks/useDeleteCartItem";
+import { Checkbox } from "../ui/checkbox";
+import { useSelectedCartList } from "@/hooks/selectedCartList";
 
 type CartItemProps = {
   item: CartItemType;
+  index: number;
 };
 
-const CartItem = ({ item }: CartItemProps) => {
+const CartItem = ({ item, index }: CartItemProps) => {
   const [quantity, setQuantity] = useState(item.quantity);
   const [isMounted, setIsMounted] = useState(false);
+
+  const selectedList = useSelectedCartList((state) => state.selectedList);
+  const updateSelectedList = useSelectedCartList(
+    (state) => state.updateSelectedList
+  );
 
   const isQuantityAvailable = quantity < item.ProductVariant.quantity;
   const isQuantityOver = quantity > item.ProductVariant.quantity;
@@ -49,6 +57,16 @@ const CartItem = ({ item }: CartItemProps) => {
 
   return (
     <div className="flex flex-row gap-4">
+      <div className="h-auto flex items-center">
+        <Checkbox
+          checked={selectedList[index]}
+          onCheckedChange={() => {
+            updateSelectedList(
+              selectedList.map((val, i) => (i === index ? !val : val))
+            );
+          }}
+        />
+      </div>
       <div className="flex items-center">
         <div className="relative min-w-10 min-h-10 md:min-w-20 md:min-h-20">
           <Image
