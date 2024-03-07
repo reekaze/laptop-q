@@ -78,7 +78,7 @@ const CartItem = ({ item, index }: CartItemProps) => {
           />
         </div>
       </div>
-      <div className="flex flex-col w-full break-all">
+      <div className="flex flex-col w-full break-all text-[12px] sm:text-[16px]">
         <p>{item.ProductVariant.Product.name}</p>
         {item.ProductVariant.name !== "DEFAULT" && (
           <>
@@ -91,7 +91,7 @@ const CartItem = ({ item, index }: CartItemProps) => {
       </div>
 
       <div className="flex flex-col gap-2 items-end">
-        <p className="font-semibold">
+        <p className="font-semibold text-[14px] sm:text-p">
           {currenciesFormatter.format(item.ProductVariant.price)}
         </p>
         <div className="flex items-center gap-2">
@@ -99,7 +99,7 @@ const CartItem = ({ item, index }: CartItemProps) => {
             onClick={() => {
               deleteCartItem();
             }}
-            className="flex flex-shrink-0 text-slate-400 cursor-pointer"
+            className="flex flex-shrink-0 text-slate-400 cursor-pointer size-4 sm:size-5"
           />
           <div
             onClick={() => {
@@ -111,15 +111,17 @@ const CartItem = ({ item, index }: CartItemProps) => {
             )}
           >
             <Minus
-              size={15}
-              className={cn(quantity > 1 ? "text-black " : "text-slate-400")}
+              className={cn(
+                quantity > 1 ? "text-black " : "text-slate-400",
+                "size-2 sm:size-4"
+              )}
             />
           </div>
           <Input
             value={quantity}
             type="number"
             autoComplete="off"
-            className="text-center min-w-12 max-h-8 text-[14px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="text-center min-w-10 sm:min-w-12 max-h-6 sm:max-h-8 text-[11px] sm:text-[14px] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setQuantity(parseInt(e.target.value.replace(/^0+/, "")))
             }
@@ -138,7 +140,8 @@ const CartItem = ({ item, index }: CartItemProps) => {
             <Plus
               size={15}
               className={cn(
-                isQuantityAvailable ? "text-black " : "text-slate-400"
+                isQuantityAvailable ? "text-black " : "text-slate-400",
+                "size-2 sm:size-4"
               )}
             />
           </div>
