@@ -9,14 +9,16 @@ import axios from "axios";
 import { UserType } from "@prisma/client";
 import Link from "next/link";
 import { toast } from "./ui/use-toast";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+
 import { cn } from "@/lib/utils";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from "./ui/menubar";
 
 type MenutItemsProps = {
   isMobileOpen?: boolean;
@@ -66,59 +68,60 @@ const MenuItems = ({ isMobileOpen, setIsMobileOpen }: MenutItemsProps) => {
       )}
 
       {user && (
-        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-          <DropdownMenuTrigger>
-            <div className="flex justify-center items-center gap-1 min-w-16">
-              <div className="w-8 h-8 text-background bg-foreground rounded-full flex items-center justify-center">
-                {user.username.charAt(0).toUpperCase()}
+        <Menubar>
+          <MenubarMenu>
+            <MenubarTrigger>
+              <div className="flex justify-center items-center gap-1">
+                <div className="w-8 h-8 text-background bg-foreground rounded-full flex items-center justify-center">
+                  {user.username.charAt(0).toUpperCase()}
+                </div>
+                <ChevronDown
+                  className={cn(
+                    "transition size-3",
+                    isDropdownOpen ? "rotate-180" : "rotate-0"
+                  )}
+                />
               </div>
-              <ChevronDown
-                className={cn(
-                  "transition size-3",
-                  isDropdownOpen ? "rotate-180" : "rotate-0"
-                )}
-              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="absolute -right-6"
-            onCloseAutoFocus={(e) => e.preventDefault()}
-          >
-            {user.type === UserType.ADMIN && (
-              <>
-                <DropdownMenuItem>
-                  <p
+            </MenubarTrigger>
+            <MenubarContent
+              onFocus={() => setIsDropdownOpen(!isDropdownOpen)}
+              onCloseAutoFocus={(e) => {
+                e.preventDefault();
+                setIsDropdownOpen(!isDropdownOpen);
+              }}
+              className="absolute -right-[75px]"
+            >
+              {user.type === UserType.ADMIN && (
+                <>
+                  <MenubarItem
                     className="cursor-pointer"
                     onClick={() => {
+                      console.log("asd");
                       setIsMobileOpen && setIsMobileOpen(false);
                       router.push("/product/add");
                     }}
                   >
                     Add Product
-                  </p>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-              </>
-            )}
+                  </MenubarItem>
+                  <MenubarSeparator />
+                </>
+              )}
 
-            {user.type === UserType.ADMIN && (
-              <>
-                <DropdownMenuItem>
-                  <p
+              {user.type === UserType.ADMIN && (
+                <>
+                  <MenubarItem
                     className="cursor-pointer"
                     onClick={() => {
                       setIsMobileOpen && setIsMobileOpen(false);
                     }}
                   >
                     Manage Product
-                  </p>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-              </>
-            )}
+                  </MenubarItem>
+                  <MenubarSeparator />
+                </>
+              )}
 
-            <DropdownMenuItem>
-              <p
+              <MenubarItem
                 className="cursor-pointer"
                 onClick={() => {
                   setIsMobileOpen && setIsMobileOpen(false);
@@ -126,10 +129,10 @@ const MenuItems = ({ isMobileOpen, setIsMobileOpen }: MenutItemsProps) => {
                 }}
               >
                 Logout
-              </p>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
       )}
     </div>
   );
