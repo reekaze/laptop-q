@@ -80,7 +80,10 @@ const MenuItems = ({ isMobileOpen, setIsMobileOpen }: MenutItemsProps) => {
               />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent onCloseAutoFocus={(e) => e.preventDefault()}>
+          <DropdownMenuContent
+            className="absolute -right-6"
+            onCloseAutoFocus={(e) => e.preventDefault()}
+          >
             {user.type === UserType.ADMIN && (
               <>
                 <DropdownMenuItem>
