@@ -1,19 +1,26 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { MenuIcon } from "lucide-react";
 
 import MenuItems from "./MenuItems";
 
-type Props = {};
+type MobileMenuProps = {
+  isMobileOpen: boolean;
+  setIsMobileOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const MobileMenu = ({}: Props) => {
+const MobileMenu = ({ isMobileOpen, setIsMobileOpen }: MobileMenuProps) => {
   return (
-    <Sheet>
+    <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
       <SheetTrigger className="flex sm:hidden">
-        <MenuIcon />
+        <MenuIcon onClick={() => setIsMobileOpen(true)} />
       </SheetTrigger>
       <SheetContent className="w-auto flex flex-col items-start justify-start sm:hidden">
-        <MenuItems />
+        <MenuItems
+          isMobileOpen={isMobileOpen}
+          setIsMobileOpen={setIsMobileOpen}
+        />
       </SheetContent>
     </Sheet>
   );

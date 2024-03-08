@@ -1,26 +1,31 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import ActionTooltip from "./ActionToolTip";
-import { ShoppingCart } from "lucide-react";
+import { ChevronDown, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "./ui/navigation-menu";
 import axios from "axios";
 import { UserType } from "@prisma/client";
 import Link from "next/link";
 import { toast } from "./ui/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
-type Props = {};
+type MenutItemsProps = {
+  isMobileOpen?: boolean;
+  setIsMobileOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-const MenuItems = ({}: Props) => {
+const MenuItems = ({ isMobileOpen, setIsMobileOpen }: MenutItemsProps) => {
   const { user, isLoading, refetchCurrentUser } = useCurrentUser();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
 
   const logout = async () => {
@@ -38,12 +43,13 @@ const MenuItems = ({}: Props) => {
       <ActionTooltip label="Cart">
         <Link
           href={"/cart"}
-          onClick={() =>
+          onClick={() => {
             !user &&
-            toast({
-              description: "user not found",
-            })
-          }
+              toast({
+                description: "user not found",
+              });
+            setIsMobileOpen && setIsMobileOpen(false);
+          }}
         >
           <ShoppingCart className="cursor-pointer" />
         </Link>
@@ -60,48 +66,67 @@ const MenuItems = ({}: Props) => {
       )}
 
       {user && (
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>
-                <div className="w-8 h-8 text-background bg-foreground rounded-full flex items-center justify-center">
-                  {user.username.charAt(0).toUpperCase()}
-                </div>
-              </NavigationMenuTrigger>
-
-              <NavigationMenuContent className="right-0">
-                <div className="w-40 bg-black text-[16px] text-white p-4 flex flex-col gap-2">
-                  {user.type === UserType.ADMIN && (
-                    <p
-                      className="cursor-pointer hover:font-semibold"
-                      onClick={() => {
-                        router.push("/product/add");
-                      }}
-                    >
-                      Add Product
-                    </p>
-                  )}
-
-                  {user.type === UserType.ADMIN && (
-                    <p
-                      className="cursor-pointer hover:font-semibold"
-                      onClick={() => {}}
-                    >
-                      Manage Product
-                    </p>
-                  )}
-
+        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+          <DropdownMenuTrigger>
+            <div className="flex justify-center items-center gap-1 min-w-16">
+              <div className="w-8 h-8 text-background bg-foreground rounded-full flex items-center justify-center">
+                {user.username.charAt(0).toUpperCase()}
+              </div>
+              <ChevronDown
+                className={cn(
+                  "transition size-3",
+                  isDropdownOpen ? "rotate-180" : "rotate-0"
+                )}
+              />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent onCloseAutoFocus={(e) => e.preventDefault()}>
+            {user.type === UserType.ADMIN && (
+              <>
+                <DropdownMenuItem>
                   <p
-                    className="cursor-pointer hover:font-semibold"
-                    onClick={logout}
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setIsMobileOpen && setIsMobileOpen(false);
+                      router.push("/product/add");
+                    }}
                   >
-                    Logout
+                    Add Product
                   </p>
-                </div>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            )}
+
+            {user.type === UserType.ADMIN && (
+              <>
+                <DropdownMenuItem>
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setIsMobileOpen && setIsMobileOpen(false);
+                    }}
+                  >
+                    Manage Product
+                  </p>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </>
+            )}
+
+            <DropdownMenuItem>
+              <p
+                className="cursor-pointer"
+                onClick={() => {
+                  setIsMobileOpen && setIsMobileOpen(false);
+                  logout();
+                }}
+              >
+                Logout
+              </p>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
     </div>
   );

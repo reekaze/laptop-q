@@ -12,6 +12,7 @@ import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import React, { useEffect, useState } from "react";
 import { Map as LMap } from "leaflet";
+import { delay } from "@/lib/utils";
 
 type MapProps = {
   center: {
@@ -41,9 +42,12 @@ const Map = ({ center, position, setPosition }: MapProps) => {
       zoom: (e) => {
         setPosition(map.getCenter());
       },
-      locationfound: (e) => {
+      locationfound: async (e) => {
         setPosition(e.latlng);
-        map.flyTo(e.latlng, map.getZoom());
+        map.flyTo(e.latlng, map.getZoom(), {
+          duration: 4,
+          easeLinearity: 0.4,
+        });
       },
     });
 
@@ -65,7 +69,12 @@ const Map = ({ center, position, setPosition }: MapProps) => {
   }, [lmap]);
 
   return (
-    <MapContainer center={center} zoom={12.0} className="h-full">
+    <MapContainer
+      center={center}
+      zoom={18.0}
+      className="h-full"
+      style={{ zIndex: 0 }}
+    >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
