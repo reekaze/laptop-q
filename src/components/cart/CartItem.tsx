@@ -8,7 +8,7 @@ import { Input } from "../ui/input";
 import { useUpdateCartItem } from "@/hooks/useUpdateCartItem";
 import { useDeleteCartItem } from "@/hooks/useDeleteCartItem";
 import { Checkbox } from "../ui/checkbox";
-import { useSelectedCartList } from "@/hooks/selectedCartList";
+import { useSelectedCartList } from "@/hooks/useSelectedCartList";
 
 type CartItemProps = {
   item: CartItemType;

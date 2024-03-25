@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { CartItemType } from "@/lib/types";
 import { currenciesFormatter } from "@/lib/utils";
-import { useSelectedCartList } from "@/hooks/selectedCartList";
+import { useSelectedCartList } from "@/hooks/useSelectedCartList";
 import LoadSpin from "../LoadSpin";
 import { useRouter } from "next/navigation";
 

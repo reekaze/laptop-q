@@ -3,7 +3,7 @@ import { delay } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelectedCartList } from "./selectedCartList";
+import { useSelectedCartList } from "./useSelectedCartList";
 
 export const useAllCartItems = () => {
   const selectedList = useSelectedCartList((state) => state.selectedList);

@@ -3,7 +3,7 @@ import { CartItemType } from "@/lib/types";
 import CartItem from "./CartItem";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
-import { useSelectedCartList } from "@/hooks/selectedCartList";
+import { useSelectedCartList } from "@/hooks/useSelectedCartList";
 import { useEffect, useState } from "react";
 
 type CartItemProps = {

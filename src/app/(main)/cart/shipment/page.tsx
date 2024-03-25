@@ -3,7 +3,7 @@ import Appbar from "@/components/Appbar";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useSelectedCartList } from "@/hooks/selectedCartList";
+import { useSelectedCartList } from "@/hooks/useSelectedCartList";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -24,32 +24,36 @@ const CartShipmentPage = (CartShip: CartShip) => {
   const [phone, setPhone] = useState("");
   const [position, setPosition] = useState(center);
 
-  //   if (selectedList.length === 0) {
-  //     router.push("/cart");
-  //   }
+  // if (selectedList.length === 0) {
+  //   router.push("/cart");
+  // }
 
   return (
     <div className="flex flex-col">
       <Appbar title="Shipment" />
-      <div className="flex flex-col p-4 h-[40vh]">
+      <div className="flex h-[40vh] flex-col p-4">
         <Map setPosition={setPosition} position={position} center={center} />
       </div>
-      <div className="flex flex-col sm:flex-row gap-2 px-4">
-        <div className="flex-1 flex flex-col gap-2">
+      <div className="flex flex-col gap-2 px-4 sm:flex-row">
+        <div className="flex flex-1 flex-col gap-2">
           <p className="text-[14px] text-neutral-700">Detail Address</p>
 
           <Textarea placeholder="Detail Address" />
         </div>
 
-        <div className="flex-1 flex flex-col gap-2">
+        <div className="flex flex-1 flex-col gap-2">
           <p className="text-[14px] text-neutral-700">Contact Phone</p>
 
           <Input
             type="tel"
-            pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
-            maxLength={12}
+            pattern="[0-9]*"
+            maxLength={14}
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value === "" || /^[0-9\b]+$/.test(e.target.value)) {
+                setPhone(e.target.value);
+              }
+            }}
           />
         </div>
       </div>

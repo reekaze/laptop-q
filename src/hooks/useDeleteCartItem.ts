@@ -2,7 +2,7 @@ import { AxiosOnError } from "@/lib/helper";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useAllCartItems } from "./useAllCartItems";
-import { useSelectedCartList } from "./selectedCartList";
+import { useSelectedCartList } from "./useSelectedCartList";
 
 type useDeleteCartItemProps = {
   cartItemId: string;
