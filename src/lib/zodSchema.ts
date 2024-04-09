@@ -49,3 +49,12 @@ export const deleteCartFormSchema = z.object({
     message: "Product Variant ID must be at least 1 character",
   }),
 });
+
+export const addOrderFormSchema = z.object({
+  address: z.string().min(4, {
+    message: "Address must be at least 4 characters",
+  }),
+  contactPhone: z.string().min(10, {
+    message: "Phone must be at least 10 digits",
+  }),
+});

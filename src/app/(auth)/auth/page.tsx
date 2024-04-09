@@ -37,7 +37,7 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
       },
       {
         skipNull: true,
-      }
+      },
     );
 
     router.push(url);
@@ -108,9 +108,9 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
       }}
     >
       <div className="relative">
-        <div className="absolute w-full h-[100vh] bg-[url('/images/bg-cube-pattern.jpg')] bg-contain opacity-30"></div>
-        <div className="absolute w-full h-[100vh] flex items-center justify-center">
-          <div className="p-8 bg-primary/95 rounded-xl flex flex-col gap-4">
+        <div className="absolute h-[100vh] w-full bg-[url('/images/bg-cube-pattern.jpg')] bg-contain opacity-30"></div>
+        <div className="absolute flex h-[100vh] w-full items-center justify-center">
+          <div className="flex flex-col gap-4 rounded-xl bg-primary/95 p-8">
             <Logo />
             <p className="text-h3 font-bold text-white">
               {isLogin ? "Sign In" : "Register"}
@@ -148,23 +148,23 @@ const AuthPage = ({ searchParams: { type } }: AuthPageProps) => {
             <Button
               disabled={isLoginPending || isRegisterPending}
               type="submit"
-              className="text-[16px] py-6 mt-2 font-bold bg-green-400 text-green-800 hover:bg-green-500"
+              className="mt-2 bg-green-400 py-6 text-[16px] font-bold text-green-800 hover:bg-green-500"
             >
               {isLogin ? "Login" : "Sign up"}
               <div
                 className={cn(
                   "ml-2",
-                  isLoginPending || isRegisterPending ? "flex" : "hidden"
+                  isLoginPending || isRegisterPending ? "flex" : "hidden",
                 )}
               >
                 <LoadSpin color="text-white" size={20} />
               </div>
             </Button>
 
-            <p className="text-neutral-400 text-p">
+            <p className="text-p text-neutral-400">
               {isLogin ? "First time?" : "Already had an account?"}
               <span
-                className="text-white hover:underline cursor-pointer ml-1"
+                className="ml-1 cursor-pointer text-white hover:underline"
                 onClick={switchAuthType}
               >
                 {isLogin ? "Create an account" : "Login"}
