@@ -79,7 +79,8 @@ enum OrderStatus {
 }
 
 model Order {
-  id String @id @default(uuid())
+  id              String @id @default(uuid())
+  midtransOrderId String @unique
 
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String

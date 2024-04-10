@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { useSelectedCartList } from "@/hooks/useSelectedCartList";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+
 import React, { useEffect, useState } from "react";
 import { addOrderFormSchema } from "@/lib/zodSchema";
 import {
@@ -22,6 +22,9 @@ import {
 } from "@/components/ui/form";
 import { useAllCartItems } from "@/hooks/useAllCartItems";
 import { CartItemType } from "@/lib/types";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { delay } from "@/lib/utils";
 
 const Map = dynamic(() => import("@/components/shipment/Map"), {
   ssr: false,
@@ -50,15 +53,57 @@ const CartShipmentPage = (CartShip: CartShip) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof addOrderFormSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof addOrderFormSchema>) => {
+    const res = await axios.post("/api/tokenizer", {
+      gross_amount: totalPrice,
+    });
+
+    if (res.data) {
+      (window as any).snap.pay(res.data, {
+        onSuccess: async function (result: any) {
+          location.replace("/");
+          toast({
+            title: "Payment success",
+          });
+        },
+        onPending: function (result: any) {
+          console.log("pending");
+          console.log(result);
+        },
+        onError: function (result: any) {
+          console.log("error");
+          console.log(result);
+        },
+        onClose: function () {
+          console.log(
+            "customer closed the popup without finishing the payment",
+          );
+        },
+      });
+    }
   };
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
+    script.setAttribute(
+      "data-client-key",
+      process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY ?? "",
+    );
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   useEffect(() => {
     let total = 0;
     let totItem = 0;
 
-    (cartItems as CartItemType[]).map((item, index) => {
+    (cartItems as CartItemType[])?.map((item, index) => {
       if (selectedList[index] === true) {
         total += item.quantity * item.ProductVariant.price;
         totItem += item.quantity;

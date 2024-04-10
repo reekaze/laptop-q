@@ -19,17 +19,17 @@ const ImagesInput = ({ images, onChange, max }: ImagesInputProps) => {
       <div className="font-semibold">Images</div>
       <Separator />
       <ScrollArea className="w-full">
-        <div className="relative flex flex-row p-4 gap-4 bg-green-300/50 rounded-md">
+        <div className="relative flex flex-row gap-4 rounded-md bg-green-300/50 p-4">
           {images.map((image, idx) => {
             return (
-              <div key={idx} className="relative min-w-20 min-h-20">
+              <div key={idx} className="relative min-h-20 min-w-20">
                 <Image
                   src={image}
                   alt="image"
                   fill
                   className="rounded-xl object-cover"
                 />
-                <div className="p-1 bg-black rounded-full absolute right-2 top-2">
+                <div className="absolute right-2 top-2 rounded-full bg-black p-1">
                   <X
                     onClick={() => {
                       onChange(images.filter((_, i) => i !== idx));
@@ -41,12 +41,12 @@ const ImagesInput = ({ images, onChange, max }: ImagesInputProps) => {
               </div>
             );
           })}
-          <div className="relative w-20 h-20 rounded-xl bg-transparent text-transparent cursor-pointer border-dashed border-2 border-neutral-500">
+          <div className="relative h-20 w-20 cursor-pointer rounded-xl border-2 border-dashed border-neutral-500 bg-transparent text-transparent">
             <input
               type="file"
               accept="image/*"
               ref={inputRef}
-              className="file:hidden w-20 h-20 rounded-xl bg-transparent text-transparent cursor-pointer"
+              className="h-20 w-20 cursor-pointer rounded-xl bg-transparent text-transparent file:hidden"
               value={""}
               onChange={(event) => {
                 const file = event?.target?.files?.[0];
@@ -65,7 +65,7 @@ const ImagesInput = ({ images, onChange, max }: ImagesInputProps) => {
               onClick={() => {
                 inputRef?.current?.click();
               }}
-              className="flex flex-row absolute inset-0 m-auto -z-1 items-center justify-center text-neutral-700"
+              className="-z-1 absolute inset-0 m-auto flex flex-row items-center justify-center text-neutral-700"
             >
               <PlusIcon size={15} />
               <ImageIcon />
